@@ -30,7 +30,7 @@
   }
 
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-[#83aa45] text-white hover:bg-[#83aa45]/80 focus:ring-2 focus:ring-[#7A8449] focus:ring-offset-2;
   }
 
   .btn-secondary {
@@ -38,7 +38,7 @@
   }
 
   .btn-outline {
-    @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply border-2 border-[#83aa45] text-[#83aa45] hover:bg-primary-50 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
   }
 
   .btn-danger {
@@ -188,7 +188,7 @@
 
   /* Gradient text */
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#83aa45] to-primary-400 bg-clip-text text-transparent;
   }
 
   /* Smooth transitions */

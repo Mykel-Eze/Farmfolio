@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../utils/constants';
 import toast from 'react-hot-toast';
 
@@ -31,11 +31,18 @@ const LoginForm = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
+      console.log('Submitting login form...');
       const result = await login(values);
+      
+      console.log('Login result:', result);
       
       if (result.success) {
         toast.success('Successfully logged in!');
-        navigate(ROUTES.DASHBOARD);
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          console.log('Navigating to dashboard...');
+          navigate(ROUTES.DASHBOARD, { replace: true });
+        }, 100);
       } else {
         toast.error(result.error || 'Login failed. Please try again.');
       }
@@ -43,41 +50,36 @@ const LoginForm = () => {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-soft p-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#E8E6DC] px-4">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center">
-              <span className="text-2xl text-white font-bold">F</span>
-            </div>
+            <img src="/farmfolio.png" alt="Farmfolio Logo" className="w-[120px]" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-          <p className="text-gray-600 mt-2">Sign in to your Farmfolio account</p>
+          <h2 className="text-3xl font-bold text-gray-900">Hello, welcome</h2>
+          <p className="text-gray-600 mt-2">Let's create something beautiful</p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
+              Email
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
-              </div>
               <input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
-                className={`block w-full pl-10 pr-3 py-3 border ${
+                className={`block w-full px-4 py-3 border-0 bg-gray-100 ${
                   formik.touched.email && formik.errors.email
-                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                } rounded-lg focus:outline-none focus:ring-2`}
-                placeholder="you@example.com"
+                    ? 'ring-2 ring-red-500'
+                    : 'focus:ring-2 focus:ring-[#83aa45]'
+                } rounded-lg focus:outline-none`}
+                placeholder="seandike@gmail.com"
                 {...formik.getFieldProps('email')}
               />
             </div>
@@ -88,23 +90,20 @@ const LoginForm = () => {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
               Password
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
-              </div>
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
-                className={`block w-full pl-10 pr-12 py-3 border ${
+                className={`block w-full px-4 py-3 pr-12 border-0 bg-gray-100 ${
                   formik.touched.password && formik.errors.password
-                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                } rounded-lg focus:outline-none focus:ring-2`}
+                    ? 'ring-2 ring-red-500'
+                    : 'focus:ring-2 focus:ring-[#8B9556]'
+                } rounded-lg focus:outline-none`}
                 placeholder="••••••••"
                 {...formik.getFieldProps('password')}
               />
@@ -129,7 +128,7 @@ const LoginForm = () => {
           <button
             type="submit"
             disabled={loading || !formik.isValid}
-            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#8B9556] hover:bg-[#7A8449] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B9556] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>
@@ -140,13 +139,20 @@ const LoginForm = () => {
                 Signing in...
               </>
             ) : (
-              <>
-                <LogIn className="h-5 w-5 mr-2" />
-                Sign In
-              </>
+              'Log in'
             )}
           </button>
         </form>
+
+        {/* Forgot Password Link */}
+        <div className="mt-6 text-center">
+          <a
+            href="#"
+            className="text-sm text-[#83aa45] hover:text-[#7A8449] transition-colors"
+          >
+            Forgot password?
+          </a>
+        </div>
 
         {/* Register Link */}
         <div className="mt-6 text-center">
@@ -154,7 +160,7 @@ const LoginForm = () => {
             Don't have an account?{' '}
             <Link
               to={ROUTES.REGISTER}
-              className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+              className="font-medium text-[#83aa45] hover:text-[#7A8449] transition-colors"
             >
               Sign up
             </Link>

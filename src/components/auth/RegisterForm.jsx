@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Mail, Lock, User, Building2, Eye, EyeOff, UserPlus } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { getUserCategories } from '../../api/userCategoriesApi';
 import { ROUTES, VALIDATION_RULES } from '../../utils/constants';
 import toast from 'react-hot-toast';
@@ -54,6 +54,10 @@ const RegisterForm = () => {
       .required('Email is required'),
     password: Yup.string()
       .min(VALIDATION_RULES.PASSWORD_MIN_LENGTH, `Password must be at least ${VALIDATION_RULES.PASSWORD_MIN_LENGTH} characters`)
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/,
+        'Password must include uppercase, lowercase, number, and special character'
+      )
       .required('Password is required'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -87,16 +91,14 @@ const RegisterForm = () => {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 px-4 py-12">
-      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-soft p-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#E8E6DC] px-4 py-12">
+      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-lg p-8">
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center">
-              <span className="text-2xl text-white font-bold">F</span>
-            </div>
+            <img src="/farmfolio.png" alt="Farmfolio Logo" className="w-[120px]" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">Create Your Account</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Create Your Account</h2>
           <p className="text-gray-600 mt-2">Join Farmfolio and share your story</p>
         </div>
 
@@ -106,22 +108,19 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* First Name */}
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-900 mb-2">
                 First Name *
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
-                </div>
                 <input
                   id="firstName"
                   name="firstName"
                   type="text"
-                  className={`block w-full pl-10 pr-3 py-3 border ${
+                  className={`block w-full px-4 py-3 border-0 bg-gray-100 ${
                     formik.touched.firstName && formik.errors.firstName
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2`}
+                      ? 'ring-2 ring-red-500'
+                      : 'focus:ring-2 focus:ring-[#8B9556]'
+                  } rounded-lg focus:outline-none`}
                   placeholder="John"
                   {...formik.getFieldProps('firstName')}
                 />
@@ -133,22 +132,19 @@ const RegisterForm = () => {
 
             {/* Last Name */}
             <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-900 mb-2">
                 Last Name *
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
-                </div>
                 <input
                   id="lastName"
                   name="lastName"
                   type="text"
-                  className={`block w-full pl-10 pr-3 py-3 border ${
+                  className={`block w-full px-4 py-3 border-0 bg-gray-100 ${
                     formik.touched.lastName && formik.errors.lastName
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2`}
+                      ? 'ring-2 ring-red-500'
+                      : 'focus:ring-2 focus:ring-[#8B9556]'
+                  } rounded-lg focus:outline-none`}
                   placeholder="Doe"
                   {...formik.getFieldProps('lastName')}
                 />
@@ -161,22 +157,19 @@ const RegisterForm = () => {
 
           {/* Company Name */}
           <div>
-            <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="companyName" className="block text-sm font-medium text-gray-900 mb-2">
               Company Name *
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Building2 className="h-5 w-5 text-gray-400" />
-              </div>
               <input
                 id="companyName"
                 name="companyName"
                 type="text"
-                className={`block w-full pl-10 pr-3 py-3 border ${
+                className={`block w-full px-4 py-3 border-0 bg-gray-100 ${
                   formik.touched.companyName && formik.errors.companyName
-                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                } rounded-lg focus:outline-none focus:ring-2`}
+                    ? 'ring-2 ring-red-500'
+                    : 'focus:ring-2 focus:ring-[#8B9556]'
+                } rounded-lg focus:outline-none`}
                 placeholder="Your Farm or Business Name"
                 {...formik.getFieldProps('companyName')}
               />
@@ -185,23 +178,20 @@ const RegisterForm = () => {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
               Email Address *
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
-              </div>
               <input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
-                className={`block w-full pl-10 pr-3 py-3 border ${
+                className={`block w-full px-4 py-3 border-0 bg-gray-100 ${
                   formik.touched.email && formik.errors.email
-                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                } rounded-lg focus:outline-none focus:ring-2`}
+                    ? 'ring-2 ring-red-500'
+                    : 'focus:ring-2 focus:ring-[#8B9556]'
+                } rounded-lg focus:outline-none`}
                 placeholder="you@example.com"
                 {...formik.getFieldProps('email')}
               />
@@ -213,17 +203,17 @@ const RegisterForm = () => {
 
           {/* User Category */}
           <div>
-            <label htmlFor="userCategoryId" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="userCategoryId" className="block text-sm font-medium text-gray-900 mb-2">
               I am a *
             </label>
             <select
               id="userCategoryId"
               name="userCategoryId"
-              className={`block w-full px-3 py-3 border ${
+              className={`block w-full px-4 py-3 border-0 bg-gray-100 ${
                 formik.touched.userCategoryId && formik.errors.userCategoryId
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-              } rounded-lg focus:outline-none focus:ring-2`}
+                  ? 'ring-2 ring-red-500'
+                  : 'focus:ring-2 focus:ring-[#8B9556]'
+              } rounded-lg focus:outline-none`}
               disabled={loadingCategories}
               {...formik.getFieldProps('userCategoryId')}
             >
@@ -243,23 +233,20 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                 Password *
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
-                  className={`block w-full pl-10 pr-12 py-3 border ${
+                  className={`block w-full px-4 py-3 pr-12 border-0 bg-gray-100 ${
                     formik.touched.password && formik.errors.password
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2`}
+                      ? 'ring-2 ring-red-500'
+                      : 'focus:ring-2 focus:ring-[#8B9556]'
+                  } rounded-lg focus:outline-none`}
                   placeholder="••••••••"
                   {...formik.getFieldProps('password')}
                 />
@@ -282,23 +269,20 @@ const RegisterForm = () => {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-900 mb-2">
                 Confirm Password *
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
-                  className={`block w-full pl-10 pr-12 py-3 border ${
+                  className={`block w-full px-4 py-3 pr-12 border-0 bg-gray-100 ${
                     formik.touched.confirmPassword && formik.errors.confirmPassword
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-                  } rounded-lg focus:outline-none focus:ring-2`}
+                      ? 'ring-2 ring-red-500'
+                      : 'focus:ring-2 focus:ring-[#8B9556]'
+                  } rounded-lg focus:outline-none`}
                   placeholder="••••••••"
                   {...formik.getFieldProps('confirmPassword')}
                 />
@@ -324,7 +308,7 @@ const RegisterForm = () => {
           <button
             type="submit"
             disabled={loading || !formik.isValid || loadingCategories}
-            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#83aa45] hover:bg-[#7A8449] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B9556] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>
@@ -335,10 +319,7 @@ const RegisterForm = () => {
                 Creating account...
               </>
             ) : (
-              <>
-                <UserPlus className="h-5 w-5 mr-2" />
-                Create Account
-              </>
+              'Create Account'
             )}
           </button>
         </form>
@@ -349,7 +330,7 @@ const RegisterForm = () => {
             Already have an account?{' '}
             <Link
               to={ROUTES.LOGIN}
-              className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+              className="font-medium text-[#8B9556] hover:text-[#7A8449] transition-colors"
             >
               Sign in
             </Link>
