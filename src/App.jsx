@@ -12,6 +12,9 @@ import RegisterForm from './components/auth/RegisterForm'
 
 // Pages
 import DashboardPage from './pages/DashboardPage'
+import MarketplacePage from './pages/MarketplacePage'
+import ProducerProfilePage from './pages/ProducerProfilePage'
+import EditProfilePage from './pages/EditProfilePage'
 
 // Story Components
 import TemplateSelector from './components/story/TemplateSelector'
@@ -32,7 +35,7 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#83aa45]"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -65,22 +68,14 @@ function App() {
         {/* Public Marketplace - No auth required */}
         <Route 
           path={ROUTES.MARKETPLACE} 
-          element={
-            <div className="p-8 text-center">
-              <h1 className="text-2xl font-bold">Marketplace Page</h1>
-              <p className="text-gray-600 mt-2">Public marketplace (to be implemented)</p>
-            </div>
-          } 
+          element={<MarketplacePage />} 
         />
 
         {/* Public Producer Profile - No auth required */}
         <Route 
           path={ROUTES.PRODUCER_PROFILE} 
           element={
-            <div className="p-8 text-center">
-              <h1 className="text-2xl font-bold">Producer Profile Page</h1>
-              <p className="text-gray-600 mt-2">Public producer profile (to be implemented)</p>
-            </div>
+            <ProducerProfilePage />
           } 
         />
 
@@ -134,10 +129,7 @@ function App() {
           path={ROUTES.EDIT_PROFILE}
           element={
             <PrivateRoute>
-              <div className="p-8 text-center">
-                <h1 className="text-2xl font-bold">Edit Profile</h1>
-                <p className="text-gray-600 mt-2">Profile editing page (to be implemented)</p>
-              </div>
+              <EditProfilePage />
             </PrivateRoute>
           }
         />
@@ -164,7 +156,7 @@ function App() {
                 <p className="text-2xl text-gray-600 mt-4">Page Not Found</p>
                 <a
                   href={ROUTES.HOME}
-                  className="mt-6 inline-block px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#7A8449] transition-colors"
+                  className="mt-6 inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                 >
                   Go Home
                 </a>

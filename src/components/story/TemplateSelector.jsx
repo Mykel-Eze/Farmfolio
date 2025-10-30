@@ -67,7 +67,7 @@ const TemplateSelector = () => {
                 onClick={() => handleSelectTemplate(template)}
                 className={`bg-white rounded-2xl shadow-soft overflow-hidden cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? 'ring-4 ring-primary-500 shadow-lg transform scale-105'
+                    ? 'ring-4 ring-[#8eb949] shadow-lg transform scale-105'
                     : 'hover:shadow-lg hover:scale-102'
                 }`}
               >
@@ -105,7 +105,7 @@ const TemplateSelector = () => {
                     <ul className="space-y-1">
                       {template.preview.sections.map((section, index) => (
                         <li key={index} className="text-sm text-gray-600 flex items-center">
-                          <span className="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2"></span>
+                          <span className="w-1.5 h-1.5 bg-[#8eb949] rounded-full mr-2"></span>
                           {section.title}
                         </li>
                       ))}
@@ -131,7 +131,7 @@ const TemplateSelector = () => {
                       }}
                       className={`flex-1 flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-[#83aa45] text-white hover:bg-primary-700'
+                          ? 'bg-[#83aa45] text-white hover:bg-[#81a24d]'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -162,7 +162,7 @@ const TemplateSelector = () => {
                 </div>
                 <button
                   onClick={handleUseTemplate}
-                  className="flex items-center px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                  className="flex items-center px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#81a24d] transition-colors font-medium"
                 >
                   Continue with Template
                   <ArrowRight className="h-5 w-5 ml-2" />
@@ -178,7 +178,7 @@ const TemplateSelector = () => {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-slide-up">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-[#83aa45] to-primary-500 text-white p-6">
+            <div className="bg-gradient-to-r from-[#83aa45] to-[#8eb949] text-white p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{selectedTemplate.preview.title}</h2>
@@ -232,7 +232,7 @@ const TemplateSelector = () => {
                   handleClosePreview();
                   handleUseTemplate();
                 }}
-                className="px-6 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                className="px-6 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-[#81a24d] transition-colors font-medium"
               >
                 Use This Template
               </button>
