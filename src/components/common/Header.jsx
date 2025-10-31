@@ -1,6 +1,7 @@
 // File: src/components/Header.jsx
 import React from 'react';
 import { LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = ({ onLogout }) => {
   return (
@@ -9,7 +10,9 @@ const Header = ({ onLogout }) => {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center">
-            <img src="/farmfolio.png" alt="Farmfolio Logo" className="w-[120px]" />
+            <Link to="/">
+              <img src="/farmfolio.png" alt="Farmfolio Logo" className="w-[120px]" />
+            </Link>
           </div>
 
           {/* User Menu */}

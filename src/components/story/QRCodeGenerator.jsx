@@ -141,7 +141,7 @@ const QRCodeGenerator = () => {
       {/* Success Header */}
       <div className="bg-white shadow-sm border-b border-primary-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                 <CheckCircle className="h-6 w-6 text-[#83aa45]" />
@@ -153,7 +153,7 @@ const QRCodeGenerator = () => {
             </div>
             <Link
               to="/dashboard"
-              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className="md:flex items-center hidden px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Home className="h-5 w-5 mr-2" />
               Dashboard
@@ -162,8 +162,20 @@ const QRCodeGenerator = () => {
         </div>
       </div>
 
+      <div className="block md:hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <Link
+            to="/dashboard"
+            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Home className="h-5 w-5 mr-2" />
+            Back to Dashboard
+          </Link>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pt-12 pt-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* QR Code Display */}
           <div className="bg-white rounded-2xl shadow-soft p-8">

@@ -18,33 +18,63 @@ const TemplateSelector = () => {
     fetchTemplates();
   }, []);
 
+  // Helper function to clean and parse JSON with escaped characters
+  const parseTemplateBody = (bodyString) => {
+    try {
+      // First, try direct parsing
+      if (typeof bodyString === 'object') {
+        return bodyString;
+      }
+
+      // Remove leading/trailing quotes if present
+      let cleanBody = bodyString.trim();
+      
+      // If it starts with a quote, remove the outer quotes
+      if (cleanBody.startsWith('"') && cleanBody.endsWith('"')) {
+        cleanBody = cleanBody.slice(1, -1);
+      }
+      
+      // Replace escaped quotes
+      cleanBody = cleanBody.replace(/\\"/g, '"');
+      cleanBody = cleanBody.replace(/\\\\/g, '\\');
+      
+      // Now parse the JSON
+      const parsed = JSON.parse(cleanBody);
+      return parsed;
+    } catch (e) {
+      console.error('Error parsing template body:', e);
+      // console.log('Original body string:', bodyString);
+      return null;
+    }
+  };
+
   const fetchTemplates = async () => {
     try {
       setLoading(true);
       const data = await getStoryTemplates();
       
-      // Parse template bodies
+      // Parse template bodies with improved handling
       const parsedTemplates = data.map(template => {
+        const bodyData = parseTemplateBody(template.body);
+        
+        let mediaData = [];
         try {
-          const bodyData = typeof template.body === 'string' 
-            ? JSON.parse(template.body) 
-            : template.body;
-          
-          const mediaData = typeof template.media === 'string'
-            ? JSON.parse(template.media)
+          mediaData = typeof template.media === 'string' 
+            ? JSON.parse(template.media) 
             : template.media;
-
-          return {
-            ...template,
-            parsedBody: bodyData,
-            parsedMedia: mediaData || []
-          };
         } catch (e) {
-          console.error('Error parsing template:', e);
-          return template;
+          console.error('Error parsing media:', e);
         }
+
+        return {
+          ...template,
+          parsedBody: bodyData,
+          parsedMedia: mediaData || [],
+          sections: bodyData?.sections || []
+        };
       });
 
+      console.log('Parsed templates:', parsedTemplates);
       setTemplates(parsedTemplates);
     } catch (error) {
       toast.error('Failed to load templates');
@@ -131,7 +161,7 @@ const TemplateSelector = () => {
             {templates.map((template) => {
               const isSelected = selectedTemplate?.id === template.id;
               const icon = getTemplateIcon(template.storyTemplateName);
-              const sections = template.parsedBody?.sections || [];
+              const sections = template.sections || [];
 
               return (
                 <div
@@ -168,24 +198,26 @@ const TemplateSelector = () => {
                     </div>
 
                     {/* Template Features */}
-                    <div className="mt-4 space-y-2">
-                      <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-                        Includes {sections.length} sections:
-                      </p>
-                      <ul className="space-y-1 max-h-32 overflow-y-auto">
-                        {sections.slice(0, 6).map((section, index) => (
-                          <li key={index} className="text-sm text-gray-600 flex items-center">
-                            <span className="w-1.5 h-1.5 bg-[#98c253] rounded-full mr-2"></span>
-                            {section.title}
-                          </li>
-                        ))}
-                        {sections.length > 6 && (
-                          <li className="text-sm text-gray-500 italic">
-                            + {sections.length - 6} more sections
-                          </li>
-                        )}
-                      </ul>
-                    </div>
+                    {sections.length > 0 && (
+                      <div className="mt-4 space-y-2">
+                        <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                          Includes {sections.length} sections:
+                        </p>
+                        <ul className="space-y-1 max-h-32 overflow-y-auto">
+                          {sections.slice(0, 6).map((section, index) => (
+                            <li key={index} className="text-sm text-gray-600 flex items-center">
+                              <span className="w-1.5 h-1.5 bg-[#98c253] rounded-full mr-2"></span>
+                              {section.title}
+                            </li>
+                          ))}
+                          {sections.length > 6 && (
+                            <li className="text-sm text-gray-500 italic">
+                              + {sections.length - 6} more sections
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
 
                     {/* Actions */}
                     <div className="mt-6 flex space-x-3">
@@ -247,13 +279,13 @@ const TemplateSelector = () => {
         </div>
 
         {/* Preview Modal */}
-        {showPreview && selectedTemplate && (
+        {showPreview && selectedTemplate && selectedTemplate.sections && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
             <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-slide-up">
               {/* Modal Header */}
               <div className="bg-gradient-to-r from-[#83aa45] to-[#98c253] text-white p-6">
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex gap-3 items-start justify-between">
+                  <div className="max-w-[80%] sm:max-w-max">
                     <h2 className="text-2xl font-bold mb-2">
                       {selectedTemplate.storyTemplateName}
                     </h2>
@@ -261,7 +293,7 @@ const TemplateSelector = () => {
                   </div>
                   <button
                     onClick={handleClosePreview}
-                    className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+                    className="w-[40px] h-[40px] bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
                   >
                     <span className="text-2xl">×</span>
                   </button>
@@ -271,7 +303,7 @@ const TemplateSelector = () => {
               {/* Modal Content */}
               <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
                 <div className="space-y-8">
-                  {selectedTemplate.parsedBody?.sections?.map((section, index) => (
+                  {selectedTemplate.sections.map((section, index) => (
                     <div key={index} className="border-b border-gray-200 pb-8 last:border-b-0">
                       <div className="flex items-start space-x-4">
                         <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -314,7 +346,7 @@ const TemplateSelector = () => {
                   onClick={handleClosePreview}
                   className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors font-medium"
                 >
-                  Close Preview
+                  Close
                 </button>
                 <button
                   onClick={() => {
