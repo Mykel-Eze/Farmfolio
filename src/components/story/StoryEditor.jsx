@@ -149,7 +149,7 @@ const StoryEditor = () => {
           <p className="text-gray-600 mb-4">No template selected</p>
           <button
             onClick={() => navigate('/story/create')}
-            className="px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-primary-700"
+            className="px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253]"
           >
             Choose Template
           </button>
@@ -192,7 +192,7 @@ const StoryEditor = () => {
               <button
                 onClick={formik.handleSubmit}
                 disabled={saving || !formik.isValid}
-                className="flex items-center px-6 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center px-6 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? (
                   <>
@@ -355,7 +355,7 @@ const StoryEditor = () => {
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
                   isDragActive
-                    ? 'border-primary-500 bg-primary-50'
+                    ? 'border-[#98c253] bg-primary-50'
                     : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
                 }`}
               >
@@ -395,7 +395,7 @@ const StoryEditor = () => {
           {/* Preview Panel */}
           <div className="lg:sticky lg:top-24 h-fit">
             <div className="bg-white rounded-xl shadow-soft overflow-hidden">
-              <div className="bg-gradient-to-r from-[#83aa45] to-primary-500 text-white p-4">
+              <div className="bg-gradient-to-r from-[#83aa45] to-[#98c253] text-white p-4">
                 <p className="text-sm font-medium">Live Preview</p>
               </div>
               

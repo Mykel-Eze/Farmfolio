@@ -4,18 +4,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { getStories, deleteStory } from '../api/storiesApi';
 import { getProducerProfiles } from '../api/producerProfilesApi';
+import Header from '../components/common/Header';
 import { 
   Plus, 
   FileText, 
   Store, 
   Settings, 
-  LogOut, 
   Edit, 
   Trash2, 
   QrCode,
   Eye,
-  Search,
-  Filter
+  Search
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../utils/constants';
@@ -86,32 +85,8 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            {/* Logo */}
-            <div className="flex items-center">
-              {/* <div className="w-10 h-10 bg-[#83aa45] rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">F</span>
-              </div>
-              <span className="ml-3 text-xl font-bold text-gray-900">Farmfolio</span> */}
-              <img src="/farmfolio.png" alt="Farmfolio Logo" className="w-[120px]" />
-            </div>
-
-            {/* User Menu */}
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={handleLogout}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 transition-colors"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Header Component */}
+      <Header onLogout={handleLogout} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <div className="flex justify-between items-center py-4">
@@ -357,7 +332,7 @@ const DashboardPage = () => {
                             </Link>
                             <Link
                               to={ROUTES.EDIT_PROFILE}
-                              className="flex-1 text-center px-4 py-2 bg-[#83aa45] text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+                              className="flex-1 text-center px-4 py-2 bg-[#83aa45] text-white rounded-lg text-sm font-medium hover:bg-[#98c253] transition-colors"
                             >
                               Edit
                             </Link>

@@ -15,6 +15,7 @@ import DashboardPage from './pages/DashboardPage'
 import MarketplacePage from './pages/MarketplacePage'
 import ProducerProfilePage from './pages/ProducerProfilePage'
 import EditProfilePage from './pages/EditProfilePage'
+import { AdminTemplateUpload } from './pages/SimpleAdminPage'
 
 // Story Components
 import TemplateSelector from './components/story/TemplateSelector'
@@ -35,7 +36,7 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#83aa45]"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -57,6 +58,16 @@ function App() {
           element={
             isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} replace /> : <RegisterForm />
           } 
+        />
+
+        {/* Admin page for uploading template */}
+        <Route
+          path={ROUTES.ADMIN}
+          element={
+            <PrivateRoute>
+              <AdminTemplateUpload />
+            </PrivateRoute>
+          }
         />
         
         {/* Public Story View - No auth required */}
@@ -156,7 +167,7 @@ function App() {
                 <p className="text-2xl text-gray-600 mt-4">Page Not Found</p>
                 <a
                   href={ROUTES.HOME}
-                  className="mt-6 inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="mt-6 inline-block px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#7da143] transition-colors"
                 >
                   Go Home
                 </a>

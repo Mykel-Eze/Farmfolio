@@ -207,7 +207,7 @@ const EditProfilePage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="spinner spinner-lg border-primary-600"></div>
+          <div className="spinner spinner-lg border-[#83aa45]"></div>
           <p className="mt-4 text-gray-600">Loading profile...</p>
         </div>
       </div>
@@ -238,7 +238,7 @@ const EditProfilePage = () => {
             <button
               onClick={formik.handleSubmit}
               disabled={saving || !formik.isValid}
-              className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center px-6 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? (
                 <>
@@ -335,7 +335,7 @@ const EditProfilePage = () => {
                   type="button"
                   onClick={handleDetectLocation}
                   disabled={detectingLocation}
-                  className="mt-2 flex items-center text-sm text-primary-600 hover:text-primary-700 transition-colors"
+                  className="mt-2 flex items-center text-sm text-[#83aa45] hover:text-[#98c253] transition-colors"
                 >
                   <MapPin className="h-4 w-4 mr-1" />
                   {detectingLocation ? 'Detecting...' : 'Detect My Location'}
@@ -357,7 +357,7 @@ const EditProfilePage = () => {
                   key={category.id}
                   className={`flex items-center p-3 border-2 rounded-lg cursor-pointer transition-all ${
                     formik.values.selectedCategories.includes(category.id)
-                      ? 'border-primary-600 bg-primary-50'
+                      ? 'border-[#83aa45] bg-primary-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -365,7 +365,7 @@ const EditProfilePage = () => {
                     type="checkbox"
                     checked={formik.values.selectedCategories.includes(category.id)}
                     onChange={() => handleCategoryToggle(category.id)}
-                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                    className="w-4 h-4 text-[#83aa45] border-gray-300 rounded focus:ring-[#98c253]"
                   />
                   <span className="ml-2 text-sm text-gray-700">
                     {category.categoryName || category.name}
@@ -432,7 +432,7 @@ const EditProfilePage = () => {
               {...getRootProps()}
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
                 isDragActive
-                  ? 'border-primary-500 bg-primary-50'
+                  ? 'border-[#98c253] bg-primary-50'
                   : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
               }`}
             >

@@ -19,7 +19,7 @@ const SearchBar = ({ value, onChange, placeholder = 'Search...', onClear }) => {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+        className="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98c253] focus:border-[#98c253] transition-colors"
       />
       {value && (
         <button

@@ -69,7 +69,7 @@ const StoryViewer = () => {
           <p className="text-gray-600 mb-8">The story you're looking for doesn't exist.</p>
           <a
             href="/"
-            className="inline-flex items-center px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors"
           >
             Go to Homepage
           </a>
@@ -274,7 +274,7 @@ const StoryViewer = () => {
                       <p className="font-semibold text-gray-900 mb-1">Phone</p>
                       <a 
                         href={`tel:${storyData.contact.phone}`}
-                        className="text-[#83aa45] hover:text-primary-700 transition-colors"
+                        className="text-[#83aa45] hover:text-[#98c253] transition-colors"
                       >
                         {storyData.contact.phone}
                       </a>
@@ -289,7 +289,7 @@ const StoryViewer = () => {
                       <p className="font-semibold text-gray-900 mb-1">Email</p>
                       <a 
                         href={`mailto:${storyData.contact.email}`}
-                        className="text-[#83aa45] hover:text-primary-700 transition-colors break-all"
+                        className="text-[#83aa45] hover:text-[#98c253] transition-colors break-all"
                       >
                         {storyData.contact.email}
                       </a>
@@ -319,7 +319,7 @@ const StoryViewer = () => {
               href="https://farmfolio.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-sm text-[#83aa45] hover:text-primary-700 transition-colors"
+              className="flex items-center text-sm text-[#83aa45] hover:text-[#98c253] transition-colors"
             >
               Create your own story
               <ExternalLink className="h-4 w-4 ml-1" />

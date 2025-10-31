@@ -35,6 +35,7 @@ export const ROUTES = {
   MARKETPLACE: '/marketplace',
   PRODUCER_PROFILE: '/producer/:id',
   EDIT_PROFILE: '/profile/edit',
+  ADMIN: '/admin',
   NOT_FOUND: '*',
 };
 

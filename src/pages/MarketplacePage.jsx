@@ -162,7 +162,7 @@ const MarketplacePage = () => {
                 onClick={() => setView('grid')}
                 className={`p-2 rounded-lg transition-colors ${
                   view === 'grid'
-                    ? 'bg-primary-100 text-primary-600'
+                    ? 'bg-primary-100 text-[#83aa45]'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -172,7 +172,7 @@ const MarketplacePage = () => {
                 onClick={() => setView('map')}
                 className={`p-2 rounded-lg transition-colors ${
                   view === 'map'
-                    ? 'bg-primary-100 text-primary-600'
+                    ? 'bg-primary-100 text-[#83aa45]'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -199,7 +199,7 @@ const MarketplacePage = () => {
               <Filter className="h-4 w-4 mr-2" />
               Filters
               {(selectedCategories.length > 0 || locationFilter.enabled) && (
-                <span className="ml-2 px-2 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full">
+                <span className="ml-2 px-2 py-0.5 bg-primary-100 text-[#98c253] text-xs rounded-full">
                   {selectedCategories.length + (locationFilter.enabled ? 1 : 0)}
                 </span>
               )}
@@ -209,7 +209,7 @@ const MarketplacePage = () => {
               onClick={handleLocationSearch}
               className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
                 locationFilter.enabled
-                  ? 'bg-primary-600 text-white hover:bg-primary-700'
+                  ? 'bg-[#83aa45] text-white hover:bg-[#98c253]'
                   : 'bg-white border border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -240,7 +240,7 @@ const MarketplacePage = () => {
                 return (
                   <span
                     key={catId}
-                    className="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm"
+                    className="inline-flex items-center px-3 py-1 bg-primary-100 text-[#98c253] rounded-full text-sm"
                   >
                     {category?.categoryName || `Category ${catId}`}
                     <button
@@ -273,7 +273,7 @@ const MarketplacePage = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading && page === 1 ? (
           <div className="text-center py-12">
-            <div className="spinner spinner-lg border-primary-600 mx-auto"></div>
+            <div className="spinner spinner-lg border-[#83aa45] mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading producers...</p>
           </div>
         ) : filteredProfiles.length === 0 ? (
@@ -287,7 +287,7 @@ const MarketplacePage = () => {
             </p>
             <button
               onClick={clearFilters}
-              className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors"
             >
               Clear Filters
             </button>
@@ -307,7 +307,7 @@ const MarketplacePage = () => {
                 <button
                   onClick={loadMore}
                   disabled={loading}
-                  className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Loading...' : 'Load More'}
                 </button>
