@@ -53,7 +53,8 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
+          # Ensure devDependencies (vite, plugins) are installed for the build
+          npm install --include=dev
           npm run build --if-present
           npm run test --if-present
 
