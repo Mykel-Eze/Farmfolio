@@ -52,4 +52,4 @@ jobs:
           app-name: 'Farmfolio-WebApp'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_53F8D824222E45E68C4776E14AA86465 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_99E531F7780D4D5F91C6140AD0F40696 }}
