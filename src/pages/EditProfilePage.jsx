@@ -270,7 +270,7 @@ const EditProfilePage = () => {
                   type="text"
                   {...formik.getFieldProps('name')}
                   className={`input ${formik.touched.name && formik.errors.name ? 'input-error' : ''}`}
-                  placeholder="Your Farm or Business Name"
+                  placeholder="Your Business Name"
                 />
                 {formik.touched.name && formik.errors.name && (
                   <p className="error-message">{formik.errors.name}</p>

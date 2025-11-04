@@ -170,7 +170,7 @@ const RegisterForm = () => {
                     ? 'ring-2 ring-red-500'
                     : 'focus:ring-2 focus:ring-[#8B9556]'
                 } rounded-lg focus:outline-none`}
-                placeholder="Your Farm or Business Name"
+                placeholder="Your Business Name"
                 {...formik.getFieldProps('companyName')}
               />
             </div>
