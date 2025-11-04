@@ -79,7 +79,7 @@ const LoginForm = () => {
                     ? 'ring-2 ring-red-500'
                     : 'focus:ring-2 focus:ring-[#83aa45]'
                 } rounded-lg focus:outline-none`}
-                placeholder="seandike@gmail.com"
+                placeholder="example@email.com"
                 {...formik.getFieldProps('email')}
               />
             </div>
