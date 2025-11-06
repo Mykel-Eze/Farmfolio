@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrimeCuts — Artisan Beef Crafted to Perfection</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">
+            <img src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png"
+                alt="PrimeCuts Logo">
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search cuts, recipes..." />
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero"
+        style="background: url(https://images.unsplash.com/photo-1690983322025-aab4f95a0269?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170) center/cover no-repeat;">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>PrimeCuts</h1>
+            <p>Hand-crafted artisan beef — where flavor meets tradition.</p>
+            <a href="#collection" class="btn">Explore Our Cuts</a>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about">
+        <div class="container">
+            <h2>Our Story</h2>
+            <p>
+                At PrimeCuts, we’ve spent decades perfecting the art of premium beef crafting.
+                Every cut is sourced from grass-fed cattle and dry-aged for that unmistakable
+                richness and tenderness that defines true artisan quality.
+            </p>
+        </div>
+    </section>
+
+    <!-- Process -->
+    <section class="process">
+        <div class="container">
+            <h2>Our Process</h2>
+            <div class="steps">
+                <div class="step">
+                    <img src="https://plus.unsplash.com/premium_photo-1726783305604-950341b0aae3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=400"
+                        alt="Farm">
+                    <h3>Farm to Table</h3>
+                    <p>We partner with ethical ranchers to raise cattle naturally and sustainably.</p>
+                </div>
+                <div class="step">
+                    <img src="https://plus.unsplash.com/premium_photo-1668616817378-a40921e765ed?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=400"
+                        alt="Aging">
+                    <h3>Dry Aging</h3>
+                    <p>Our beef is aged for up to 45 days to bring out deep, savory flavors.</p>
+                </div>
+                <div class="step">
+                    <img src="https://images.unsplash.com/photo-1690983323540-d6e889c4b107?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=400"
+                        alt="Cutting">
+                    <h3>Handcrafted Cuts</h3>
+                    <p>Each cut is expertly carved by artisans for a perfect dining experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection -->
+    <section id="collection" class="collection">
+        <h2>Signature Cuts</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1690983323544-026a23725551?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                    alt="Ribeye">
+                <h3>Ribeye Supreme</h3>
+            </div>
+            <div class="card">
+                <img src="https://plus.unsplash.com/premium_photo-1663012872761-33dd73e292cc?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                    alt="T-Bone">
+                <h3>T-Bone Masterpiece</h3>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1690983323540-d6e889c4b107?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                    alt="Sirloin">
+                <h3>Sirloin Heritage</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipes -->
+    <section class="recipes">
+        <div class="container">
+            <h2>Recipes & Pairings</h2>
+            <p>Discover chef-crafted recipes that elevate your dining experience — from grilled ribeyes to gourmet stews
+                and wine pairings.</p>
+            <a href="#" class="btn">View Recipes</a>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2>What Our Customers Say</h2>
+        <div class="testimonials-grid">
+            <blockquote>“The ribeye was unbelievably tender — it melted in my mouth.”<span>— Sarah, Chef</span>
+            </blockquote>
+            <blockquote>“Hands down the best beef I’ve ever had. You can taste the craftsmanship.”<span>— David,
+                    Restaurateur</span></blockquote>
+            <blockquote>“Their attention to detail and flavor is unmatched in the industry.”<span>— Emma, Food
+                    Critic</span></blockquote>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery">
+        <h2>In the Butcher’s Craft</h2>
+        <div class="gallery-grid">
+            <img src="https://plus.unsplash.com/premium_photo-1682129511550-6a1a403caa75?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                alt="Butcher">
+            <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                alt="Steak">
+            <img src="https://plus.unsplash.com/premium_photo-1668616817378-a40921e765ed?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                alt="Beef cuts">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo"><img
+                    src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png"
+                    alt="Artesano Logo" /></div>
+            <div class="contact-info">
+                <p><strong>Email:</strong> contact@primecuts.com</p>
+                <p><strong>Phone:</strong> +1 (555) 987-6543</p>
+                <p><strong>Location:</strong> 89 PrimeCuts Lane, Paris, France</p>
+            </div>
+            <div class="socials">
+                <a href="#">Instagram</a> | <a href="#">Pinterest</a> | <a href="#">Facebook</a>
+            </div>
+        </div>
+        <p class="footer-bottom">&copy; 2025 PrimeCuts. Crafted with Passion.</p>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero fade
+        gsap.from(".hero-content h1", { y: 80, opacity: 0, duration: 1 });
+        gsap.from(".hero-content p", { y: 50, opacity: 0, delay: 0.3, duration: 1 });
+        gsap.from(".hero-content a", { y: 30, opacity: 1, delay: 0.6, duration: 1 });
+
+        // Scroll animations
+        gsap.utils.toArray("section").forEach(section => {
+            gsap.from(section.querySelector("h2"), {
+                scrollTrigger: section,
+                y: 80,
+                opacity: 0,
+                duration: 1
+            });
+            gsap.from(section.querySelectorAll("p, .grid, .steps, blockquote"), {
+                scrollTrigger: section,
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2
+            });
+        });
+
+    </script>
+</body>
+
+</html>

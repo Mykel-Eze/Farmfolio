@@ -80,10 +80,17 @@ const RegisterForm = () => {
     validationSchema,
     onSubmit: async (values) => {
       const result = await register(values);
-      
+
       if (result.success) {
-        toast.success('Account created successfully!');
-        navigate(ROUTES.DASHBOARD);
+        if (result.requiresLogin) {
+          // Registration succeeded but user needs to login
+          toast.success(result.message || 'Account created successfully! Please log in.');
+          navigate(ROUTES.LOGIN);
+        } else {
+          // Registration succeeded with auto-login
+          toast.success('Account created successfully!');
+          navigate(ROUTES.DASHBOARD);
+        }
       } else {
         toast.error(result.error || 'Registration failed. Please try again.');
       }

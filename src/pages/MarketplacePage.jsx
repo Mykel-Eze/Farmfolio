@@ -146,43 +146,50 @@ const MarketplacePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Marketplace</h1>
-              <p className="text-gray-600 mt-1">Discover local producers near you</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/20 to-gray-50">
+      {/* Premium Header */}
+      <header className="relative overflow-hidden bg-gradient-to-r from-[#83aa45] to-[#a0ad5f] shadow-xl">
+        <div className="absolute inset-0 bg-black/5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
+                Marketplace 🌾
+              </h1>
+              <p className="text-base sm:text-lg text-white/90">
+                Discover local producers and sustainable farms near you
+              </p>
             </div>
-            
-            {/* View Toggle */}
-            <div className="flex items-center space-x-2">
+
+            {/* View Toggle - Premium Style */}
+            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm p-1.5 rounded-xl">
               <button
                 onClick={() => setView('grid')}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`px-4 py-2.5 rounded-lg transition-all font-medium text-sm ${
                   view === 'grid'
-                    ? 'bg-primary-100 text-[#83aa45]'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-white text-[#83aa45] shadow-lg'
+                    : 'text-white hover:bg-white/20'
                 }`}
               >
-                <Grid className="h-5 w-5" />
+                <Grid className="h-5 w-5 inline mr-2" />
+                <span className="hidden sm:inline">Grid</span>
               </button>
               <button
                 onClick={() => setView('map')}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`px-4 py-2.5 rounded-lg transition-all font-medium text-sm ${
                   view === 'map'
-                    ? 'bg-primary-100 text-[#83aa45]'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-white text-[#83aa45] shadow-lg'
+                    : 'text-white hover:bg-white/20'
                 }`}
               >
-                <MapIcon className="h-5 w-5" />
+                <MapIcon className="h-5 w-5 inline mr-2" />
+                <span className="hidden sm:inline">Map</span>
               </button>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="mt-6">
+          {/* Premium Search Bar */}
+          <div className="mb-5">
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
@@ -190,16 +197,16 @@ const MarketplacePage = () => {
             />
           </div>
 
-          {/* Filter Bar */}
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          {/* Premium Filter Bar */}
+          <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center px-4 py-2.5 bg-white/90 backdrop-blur-sm rounded-xl hover:bg-white shadow-md hover:shadow-lg transition-all font-medium text-sm"
             >
               <Filter className="h-4 w-4 mr-2" />
               Filters
               {(selectedCategories.length > 0 || locationFilter.enabled) && (
-                <span className="ml-2 px-2 py-0.5 bg-primary-100 text-[#98c253] text-xs rounded-full">
+                <span className="ml-2 px-2.5 py-0.5 bg-[#83aa45] text-white text-xs rounded-full font-bold">
                   {selectedCategories.length + (locationFilter.enabled ? 1 : 0)}
                 </span>
               )}
@@ -207,47 +214,47 @@ const MarketplacePage = () => {
 
             <button
               onClick={handleLocationSearch}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all font-medium text-sm ${
                 locationFilter.enabled
-                  ? 'bg-[#83aa45] text-white hover:bg-[#98c253]'
-                  : 'bg-white border border-gray-300 hover:bg-gray-50'
+                  ? 'bg-white text-[#83aa45]'
+                  : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white'
               }`}
             >
               <MapPin className="h-4 w-4 mr-2" />
-              {locationFilter.enabled ? 'Near Me' : 'Use My Location'}
+              {locationFilter.enabled ? 'Near Me ✓' : 'Use My Location'}
             </button>
 
             {(selectedCategories.length > 0 || locationFilter.enabled || searchQuery) && (
               <button
                 onClick={clearFilters}
-                className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex items-center px-4 py-2.5 text-white/90 hover:text-white transition-colors font-medium text-sm"
               >
                 <X className="h-4 w-4 mr-1" />
                 Clear All
               </button>
             )}
 
-            <div className="ml-auto text-sm text-gray-600">
-              {filteredProfiles.length} producer{filteredProfiles.length !== 1 ? 's' : ''} found
+            <div className="ml-auto text-sm font-semibold text-white/90 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl">
+              {filteredProfiles.length} producer{filteredProfiles.length !== 1 ? 's' : ''}
             </div>
           </div>
 
-          {/* Active Filters */}
+          {/* Active Filters - Premium Pills */}
           {selectedCategories.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               {selectedCategories.map((catId) => {
                 const category = categories.find(c => c.id === catId);
                 return (
                   <span
                     key={catId}
-                    className="inline-flex items-center px-3 py-1 bg-primary-100 text-[#98c253] rounded-full text-sm"
+                    className="inline-flex items-center px-4 py-2 bg-white/90 backdrop-blur-sm text-gray-800 rounded-xl text-sm font-medium shadow-md"
                   >
                     {category?.categoryName || `Category ${catId}`}
                     <button
                       onClick={() => handleCategoryToggle(catId)}
-                      className="ml-2 hover:text-primary-900"
+                      className="ml-2 hover:text-red-600 transition-colors"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-4 w-4" />
                     </button>
                   </span>
                 );
@@ -272,24 +279,24 @@ const MarketplacePage = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading && page === 1 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-16 sm:py-20">
             <div className="spinner spinner-lg border-[#83aa45] mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading producers...</p>
+            <p className="mt-6 text-gray-600 font-medium text-lg">Loading producers...</p>
           </div>
         ) : filteredProfiles.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="h-10 w-10 text-gray-400" />
+          <div className="text-center py-16 sm:py-20">
+            <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Search className="h-12 w-12 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No producers found</h3>
-            <p className="text-gray-600 mb-6">
-              Try adjusting your search or filters
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">No producers found</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto text-base sm:text-lg">
+              Try adjusting your search or filters to discover more producers
             </p>
             <button
               onClick={clearFilters}
-              className="px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors"
+              className="px-8 py-4 bg-gradient-to-r from-[#83aa45] to-[#a0ad5f] text-white rounded-xl shadow-lg hover:shadow-xl transition-all font-semibold"
             >
-              Clear Filters
+              Clear All Filters
             </button>
           </div>
         ) : view === 'grid' ? (
@@ -301,15 +308,15 @@ const MarketplacePage = () => {
               ))}
             </div>
 
-            {/* Load More Button */}
+            {/* Load More Button - Premium */}
             {hasMore && (
-              <div className="mt-8 text-center">
+              <div className="mt-10 text-center">
                 <button
                   onClick={loadMore}
                   disabled={loading}
-                  className="px-6 py-3 bg-[#83aa45] text-white rounded-lg hover:bg-[#98c253] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-8 py-4 bg-gradient-to-r from-[#83aa45] to-[#a0ad5f] text-white rounded-xl shadow-lg hover:shadow-xl transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Loading...' : 'Load More'}
+                  {loading ? 'Loading...' : 'Load More Producers'}
                 </button>
               </div>
             )}

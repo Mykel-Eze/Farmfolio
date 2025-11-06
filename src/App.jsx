@@ -23,6 +23,12 @@ import StoryEditor from './components/story/StoryEditor'
 import QRCodeGenerator from './components/story/QRCodeGenerator'
 import StoryViewer from './components/story-viewer/StoryViewer'
 
+// New Template Flow
+import StoryTemplateSelectorPage from './pages/StoryTemplateSelectorPage'
+import MarketplaceTemplateSelectorPage from './pages/MarketplaceTemplateSelectorPage'
+import StoryDraftEditorPage from './pages/StoryDraftEditorPage'
+import MarketplaceDraftEditorPage from './pages/MarketplaceDraftEditorPage'
+
 function App() {
   const { isAuthenticated, loading, user, token } = useAuth()
 
@@ -100,6 +106,45 @@ function App() {
           }
         />
 
+        {/* New Template Flow - Story */}
+        <Route
+          path="/story/templates"
+          element={
+            <PrivateRoute>
+              <StoryTemplateSelectorPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/story/edit-draft/:id"
+          element={
+            <PrivateRoute>
+              <StoryDraftEditorPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* New Template Flow - Marketplace Profile */}
+        <Route
+          path="/profile/templates"
+          element={
+            <PrivateRoute>
+              <MarketplaceTemplateSelectorPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/profile/edit-draft/:id"
+          element={
+            <PrivateRoute>
+              <MarketplaceDraftEditorPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Legacy Routes - Keep for backward compatibility */}
         <Route
           path={ROUTES.CREATE_STORY}
           element={

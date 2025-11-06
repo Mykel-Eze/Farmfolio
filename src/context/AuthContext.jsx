@@ -191,13 +191,23 @@ export const AuthProvider = ({ children }) => {
           };
         }
       } else {
-        console.error('Unexpected response structure:', response);
-        throw new Error('Invalid response from server');
+        console.warn('Registration response has no token - registration succeeded but no auto-login');
+        // Registration succeeded but no auto-login token provided
+        // Return success without setting auth state - user needs to login
+        return {
+          success: true,
+          requiresLogin: true,
+          message: 'Account created successfully. Please log in.'
+        };
       }
 
       if (!authToken) {
-        console.error('No token found in response');
-        throw new Error('No authentication token received');
+        console.warn('Registration succeeded but no token provided - user needs to login');
+        return {
+          success: true,
+          requiresLogin: true,
+          message: 'Account created successfully. Please log in.'
+        };
       }
 
       console.log('Registration successful, storing data...');

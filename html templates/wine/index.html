@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Château d’Élégance | Premium Wines</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Open+Sans:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="logo">
+            <img src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png" alt="logo">
+        </div>
+
+        <input type="text" placeholder="Search Marketplace..." class="search-input" />
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero"
+        style="background: url(https://plus.unsplash.com/premium_photo-1683141424343-60a8b9639309?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170) center/cover no-repeat;">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Château d’Élégance</h1>
+            <p>A Symphony of Timeless Taste</p>
+            <a href="#collection" class="btn">Explore Collection</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="content">
+            <h2>Our Heritage</h2>
+            <p>
+                Nestled in the rolling hills of Bordeaux, Château d’Élégance crafts wines
+                that embody sophistication and tradition. Every bottle tells a story of
+                passion, patience, and perfection, nurtured by centuries-old expertise.
+            </p>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section id="story" class="story">
+        <div class="content">
+            <h2>The Art of Winemaking</h2>
+            <p>
+                Our story began in 1872 with a small family vineyard and a dream to create wines that inspire emotion.
+                From handpicking grapes at dawn to aging in French oak barrels, each stage is guided by artisans devoted
+                to excellence.
+            </p>
+        </div>
+    </section>
+
+    <!-- Vineyard Section -->
+    <section id="vineyard" class="vineyard">
+        <div class="vineyard-text">
+            <h2>Our Vineyard</h2>
+            <p>
+                Located in the heart of Bordeaux, our vineyard stretches across sun-kissed valleys where soil, climate,
+                and tradition unite. Sustainably cultivated vines yield grapes of unparalleled flavor and elegance.
+            </p>
+        </div>
+        <div class="vineyard-img">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=80"
+                alt="Vineyard">
+        </div>
+    </section>
+
+    <!-- Collection Section -->
+    <section id="collection" class="collection">
+        <h2>Signature Collection</h2>
+        <div class="grid">
+            <div class="card"><img
+                    src="https://plus.unsplash.com/premium_photo-1682097091093-dd18b37764a5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                    alt="Wine 1">
+                <h3>Merlot Reserve</h3>
+            </div>
+            <div class="card"><img
+                    src="https://plus.unsplash.com/premium_photo-1683141416406-f73cadbde37c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                    alt="Wine 2">
+                <h3>Cabernet Vintage</h3>
+            </div>
+            <div class="card"><img
+                    src="https://plus.unsplash.com/premium_photo-1743043625853-7bd3a0b19e91?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=500"
+                    alt="Wine 3">
+                <h3>Rosé Prestige</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Section -->
+    <section id="awards" class="awards">
+        <h2>International Recognition</h2>
+        <div class="awards-grid">
+            <div class="award-card">
+                <h3>Gold Medal</h3>
+                <p>Paris Wine Expo 2023</p>
+            </div>
+            <div class="award-card">
+                <h3>Best European Winery</h3>
+                <p>World Wine Awards 2022</p>
+            </div>
+            <div class="award-card">
+                <h3>Sommelier’s Choice</h3>
+                <p>Global Wine Guild 2024</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+        <h2>What Connoisseurs Say</h2>
+        <div class="testimonial-grid">
+            <blockquote>
+                “A masterpiece in every pour. Château d’Élégance defines luxury.”
+                <span>– Wine Enthusiast Magazine</span>
+            </blockquote>
+            <blockquote>
+                “Smooth, velvety texture with a finish that lingers like a memory. Absolutely divine.”
+                <span>– Marie Leclerc, Sommelier</span>
+            </blockquote>
+            <blockquote>
+                “Their Merlot Reserve redefines elegance. Truly a gem for every wine lover.”
+                <span>– Thomas Green, Critic & Author</span>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png" alt="logo">
+            </div>
+            <div class="contact-info">
+                <p><strong>Email:</strong> info@chateadelegance.com</p>
+                <p><strong>Phone:</strong> +33 1 23 45 67 89</p>
+                <p><strong>Location:</strong> 14 Rue du Vin, Bordeaux, France</p>
+            </div>
+            <div class="socials">
+                <a href="#">Instagram</a> | <a href="#">Facebook</a> | <a href="#">Twitter</a>
+            </div>
+        </div>
+        <p class="footer-bottom">&copy; 2025 Château d’Élégance. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Toggle mobile nav
+        const menuBtn = document.querySelector(".menu-toggle");
+        const nav = document.querySelector("nav");
+        menuBtn.addEventListener("click", () => {
+            nav.classList.toggle("active");
+            nav.style.display = nav.classList.contains("active") ? "flex" : "none";
+        });
+
+        // Parallax hero effect
+        window.addEventListener("scroll", () => {
+            const scroll = window.scrollY;
+            const hero = document.querySelector(".hero");
+            hero.style.backgroundPositionY = `${scroll * 0.4}px`;
+        });
+
+        // Hero fade-in animation
+        gsap.from(".hero-content h1", { duration: 1.2, y: 80, opacity: 0 });
+        gsap.from(".hero-content p", { duration: 1.2, delay: 0.4, y: 40, opacity: 0 });
+        gsap.from(".hero-content a", { duration: 1.2, delay: 0.8, y: 20, opacity: 1 });
+
+        // Scroll-triggered animations
+        gsap.utils.toArray("section").forEach(section => {
+            gsap.from(section.querySelector("h2"), {
+                scrollTrigger: section,
+                y: 60,
+                opacity: 0,
+                duration: 1
+            });
+            gsap.from(section.querySelector("p, .grid, blockquote, .vineyard-img, .awards-grid, form"), {
+                scrollTrigger: section,
+                y: 40,
+                opacity: 0,
+                delay: 0.3,
+                duration: 1
+            });
+        });
+    </script>
+</body>
+
+</html>
