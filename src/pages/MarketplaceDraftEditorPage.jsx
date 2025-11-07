@@ -184,7 +184,7 @@ const MarketplaceDraftEditorPage = () => {
         </div>
       </div>
 
-      <div className="pt-[110px]">
+      <div className="pt-[110px] md:pt-[73px]">
         <TemplateComponent
           data={templateData}
           isEditMode={!isPreviewMode}

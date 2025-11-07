@@ -104,7 +104,7 @@ const MarketplaceTemplateSelectorPage = () => {
           </div>
         </div>
 
-        <div className="pt-[110px]">
+        <div className="pt-[110px] md:pt-[73px]">
           <TemplateComponent data={previewData} isEditMode={false} />
         </div>
       </div>
