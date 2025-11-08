@@ -13,8 +13,31 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
   const fileInputRef = useRef(null);
   const [currentImageField, setCurrentImageField] = useState(null);
 
-  // Parse data from backend (JSON string)
-  const content = typeof data?.body === 'string' ? JSON.parse(data.body) : data?.body || {};
+  // Parse data from backend (JSON string) - handle escaped JSON
+  let content = data?.body || {};
+
+  // If already an object, use it directly
+  if (typeof content === 'object' && content !== null && !Array.isArray(content)) {
+    // Content is already parsed
+  } else if (typeof content === 'string') {
+    try {
+      // If the string starts with { or [, it's likely escaped JSON - unescape it
+      if (content.trim().startsWith('{') || content.trim().startsWith('[')) {
+        // Replace escaped quotes with regular quotes
+        content = content.replace(/\\"/g, '"');
+      }
+
+      content = JSON.parse(content);
+      // Check if it's still a string (double-stringified from backend)
+      if (typeof content === 'string') {
+        content = JSON.parse(content);
+      }
+    } catch (error) {
+      console.error('[ArtisanTemplate] Error parsing template body:', error);
+      console.error('[ArtisanTemplate] Raw body value:', data?.body);
+      content = {};
+    }
+  }
 
   // Default content structure
   const defaultContent = {

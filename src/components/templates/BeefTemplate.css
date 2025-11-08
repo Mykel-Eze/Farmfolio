@@ -277,6 +277,8 @@
   height: 50px;
   object-fit: contain;
   cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .beef-contact-info p {
