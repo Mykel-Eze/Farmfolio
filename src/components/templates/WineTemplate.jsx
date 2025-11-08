@@ -93,6 +93,17 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
             duration: 1
           });
         }
+
+        const elements = section.querySelectorAll('p, .wine-content, .wine-grid, .wine-awards-grid, .wine-testimonial-grid');
+        if (elements.length > 0) {
+          gsap.from(elements, {
+            scrollTrigger: section,
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2
+          });
+        }
       });
     });
 

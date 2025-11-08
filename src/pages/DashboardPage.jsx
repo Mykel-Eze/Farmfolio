@@ -426,19 +426,12 @@ const DashboardPage = () => {
                               <span>View</span>
                             </Link>
                             <Link
-                              to={`/story/edit/${story.id}`}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-green-50 text-[#83aa45] rounded-lg hover:bg-green-100 transition-colors text-xs sm:text-sm font-medium"
-                            >
-                              <Edit className="h-4 w-4" />
-                              <span>Edit</span>
-                            </Link>
-                            <button
-                              onClick={() => navigate(`/story/${story.id}/qr`)}
+                              to={`/story/${story.id}/qr`}
                               className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors text-xs sm:text-sm font-medium"
                             >
                               <QrCode className="h-4 w-4" />
-                              <span>QR</span>
-                            </button>
+                              <span>QR Code</span>
+                            </Link>
                             <button
                               onClick={() => handleDeleteStory(story.id)}
                               className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors text-xs sm:text-sm font-medium"
@@ -577,7 +570,7 @@ const DashboardPage = () => {
                               <span>View</span>
                             </Link>
                             <Link
-                              to={ROUTES.EDIT_PROFILE}
+                              to={`/profile/edit-draft/${profile.id}`}
                               className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all"
                             >
                               <Edit className="h-4 w-4" />

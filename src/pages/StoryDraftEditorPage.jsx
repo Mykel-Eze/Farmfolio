@@ -28,9 +28,33 @@ const StoryDraftEditorPage = () => {
       const data = await getStoryDraft(id);
       setDraft(data);
 
-      // Parse the body if it's a string
-      const parsedBody = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
-      setEditedContent(parsedBody);
+      // Parse the body - handle escaped JSON from backend
+      let parsedBody = data.body;
+
+      if (typeof parsedBody === 'string') {
+        try {
+          // If the string starts with { or [, it's likely escaped JSON - unescape it
+          if (parsedBody.trim().startsWith('{') || parsedBody.trim().startsWith('[')) {
+            // Replace escaped quotes with regular quotes
+            parsedBody = parsedBody.replace(/\\"/g, '"');
+          }
+
+          parsedBody = JSON.parse(parsedBody);
+
+          // Check if still a string (double-stringified)
+          if (typeof parsedBody === 'string') {
+            parsedBody = JSON.parse(parsedBody);
+          }
+        } catch (parseError) {
+          console.error('Error parsing draft body:', parseError);
+          console.error('Raw body value:', data.body);
+          toast.error('Draft data is corrupted. Please contact support.');
+          navigate(ROUTES.DASHBOARD);
+          return;
+        }
+      }
+
+      setEditedContent(parsedBody || {});
     } catch (error) {
       console.error('Error loading draft:', error);
       toast.error('Failed to load draft');
@@ -86,8 +110,8 @@ const StoryDraftEditorPage = () => {
       const story = await createStory(storyData);
       toast.success('Story published successfully!');
 
-      // Navigate to the published story
-      navigate(`/story/${story.id}`);
+      // Navigate to the QR code page
+      navigate(`/story/${story.id}/qr`);
     } catch (error) {
       console.error('Error publishing story:', error);
       toast.error('Failed to publish story');
