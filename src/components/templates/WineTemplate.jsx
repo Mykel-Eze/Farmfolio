@@ -1,5 +1,6 @@
 // File: src/components/templates/WineTemplate.jsx
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './WineTemplate.css';
@@ -118,9 +119,13 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
       {/* Navigation */}
       <header className="wine-navbar">
         <div className="wine-logo">
-          <img src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png" alt="logo" />
+          <img src="/farmfolio.png" alt="logo" />
         </div>
-        <input type="text" id="search" placeholder="Search Marketplace..." className="wine-search-input" />
+
+        <Link to="/marketplace" className="marketplace-link">
+          <img src="/market.png" alt="Marketplace" />
+        </Link>
+        {/* <input type="text" id="search" placeholder="Search Marketplace..." className="wine-search-input" /> */}
       </header>
 
       {/* Hero Section */}

@@ -32,6 +32,14 @@
   cursor: pointer;
 }
 
+.beef-navbar a.marketplace-link {
+  background: rgba(255, 255, 255, 0.8);
+  width: 45px;
+  height: 45px;
+  padding: 9px;
+  border-radius: 50%;
+}
+
 .beef-search input {
   background: #1a1a1a;
   border: none;
@@ -48,7 +56,7 @@
 /* Hero */
 .beef-hero {
   position: relative;
-  height: 100vh;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;

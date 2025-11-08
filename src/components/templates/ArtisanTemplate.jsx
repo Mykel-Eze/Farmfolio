@@ -1,5 +1,6 @@
 // File: src/components/templates/ArtisanTemplate.jsx
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './ArtisanTemplate.css';
@@ -129,11 +130,15 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
       {/* Navbar */}
       <nav className="artisan-navbar">
         <div className="artisan-logo">
-          <img src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png" alt="Logo" />
+          <img src="/farmfolio.png" alt="Logo" />
         </div>
-        <div className="artisan-search-bar">
+
+        <Link to="/marketplace" className="marketplace-link">
+          <img src="/market.png" alt="Marketplace" />
+        </Link>
+        {/* <div className="artisan-search-bar">
           <input type="text" placeholder="Search artisan crafts..." />
-        </div>
+        </div> */}
       </nav>
 
       {/* Hero */}

@@ -30,6 +30,14 @@
   height: 40px;
 }
 
+.artisan-navbar a.marketplace-link {
+  background: rgba(255, 255, 255, 0.4);
+  width: 45px;
+  height: 45px;
+  padding: 9px;
+  border-radius: 50%;
+}
+
 .artisan-search-bar {
   display: flex;
   align-items: center;
@@ -49,7 +57,7 @@
 /* Hero */
 .artisan-hero {
   position: relative;
-  height: 100vh;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;

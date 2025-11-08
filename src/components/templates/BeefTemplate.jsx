@@ -1,5 +1,6 @@
 // File: src/components/templates/BeefTemplate.jsx
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './BeefTemplate.css';
@@ -171,13 +172,17 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
       <header className="beef-navbar">
         <div className="beef-logo">
           <img
-            src="https://farmfolio-webapp-f7ehgcehfvejeue6.uksouth-01.azurewebsites.net/farmfolio.png"
+            src="/farmfolio.png"
             alt="Logo"
           />
         </div>
-        <div className="beef-search">
+
+        <Link to="/marketplace" className="marketplace-link">
+          <img src="/market.png" alt="Marketplace" />
+        </Link>
+        {/* <div className="beef-search">
           <input type="text" id="search" placeholder="Search cuts, recipes..." />
-        </div>
+        </div> */}
       </header>
 
       {/* Hero Section */}
