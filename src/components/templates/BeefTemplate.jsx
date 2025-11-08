@@ -223,6 +223,7 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
             contentEditable={isEditMode}
             suppressContentEditableWarning
             onBlur={(e) => handleEditClick('heroTitle', e.target.textContent)}
+            onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroTitle}
           </h1>
@@ -230,6 +231,7 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
             contentEditable={isEditMode}
             suppressContentEditableWarning
             onBlur={(e) => handleEditClick('heroSubtitle', e.target.textContent)}
+            onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroSubtitle}
           </p>
