@@ -49,20 +49,54 @@ const QRCodeGenerator = () => {
   const generateQRCode = async () => {
     try {
       const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+
+      // 1️⃣ Generate QR Code
       await QRCode.toCanvas(canvas, storyUrl, {
         width: qrSize,
         margin: QR_CONFIG.MARGIN,
         color: {
-          dark: QR_CONFIG.COLOR.DARK,
-          light: QR_CONFIG.COLOR.LIGHT,
+          dark: '#4F6A21', // darker version of brand green for contrast
+          light: '#ffffff',
         },
-        errorCorrectionLevel: QR_CONFIG.ERROR_CORRECTION,
+        errorCorrectionLevel: 'H', // allows logo overlay
       });
+
+      // 2️⃣ Overlay circular logo
+      const logo = new Image();
+      logo.src = '/farmfolio-icon.png'; // your logo file (public folder)
+      logo.onload = () => {
+        const logoSize = qrSize * 0.18; // 18% of QR size
+        const x = (canvas.width - logoSize) / 2;
+        const y = (canvas.height - logoSize) / 2;
+
+        // Draw a tinted circular background behind the logo
+        const bgRadius = logoSize / 2 + 6;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, bgRadius, 0, Math.PI * 2, false);
+        ctx.fillStyle = '#f0f4e5'; // soft brand-tinted background
+        ctx.fill();
+        ctx.closePath();
+
+        // Create circular clipping path for the logo
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, logoSize / 2, 0, Math.PI * 2, false);
+        ctx.clip();
+
+        // Draw the logo inside the circular area
+        ctx.drawImage(logo, x, y, logoSize, logoSize);
+
+        ctx.restore(); // restore to remove clipping
+      };
     } catch (error) {
       console.error('Error generating QR code:', error);
       toast.error('Failed to generate QR code');
     }
   };
+
 
   const handleDownloadQR = () => {
     try {
