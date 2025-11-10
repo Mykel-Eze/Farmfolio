@@ -5,6 +5,7 @@ import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-map
 import { MapPin, Phone, Mail, ExternalLink, Navigation } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MAPS_CONFIG } from '../../utils/constants';
+import { generateProfileUrl } from '../../utils/urlHelpers';
 
 const mapContainerStyle = {
   width: '100%',
@@ -242,7 +243,7 @@ const MapView = ({ profiles }) => {
                 )}
 
                 <Link
-                  to={`/producer/${selectedProfile.id}`}
+                  to={generateProfileUrl(selectedProfile.id, selectedProfile.name)}
                   className="flex items-center text-xs text-[#83aa45] hover:text-[#779a3f] font-medium ml-auto"
                 >
                   View Profile

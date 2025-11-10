@@ -5,10 +5,12 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { getProducerProfileById } from '../api/producerProfilesApi';
 import { getTemplateComponent, TEMPLATE_TYPES } from '../components/templates';
+import { extractIdFromSlug } from '../utils/urlHelpers';
 import toast from 'react-hot-toast';
 
 const ProducerProfilePage = () => {
-  const { id } = useParams();
+  const { slugId } = useParams();
+  const id = extractIdFromSlug(slugId);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 

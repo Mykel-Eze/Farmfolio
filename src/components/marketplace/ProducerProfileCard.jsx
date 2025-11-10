@@ -3,6 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, ExternalLink, Star } from 'lucide-react';
+import { generateProfileUrl } from '../../utils/urlHelpers';
 
 const ProducerProfileCard = ({ profile }) => {
   // Parse body if it's a JSON string
@@ -28,7 +29,7 @@ const ProducerProfileCard = ({ profile }) => {
 
   return (
     <Link
-      to={`/producer/${profile.id}`}
+      to={generateProfileUrl(profile.id, profile.name)}
       className="bg-white rounded-xl shadow-soft hover:shadow-lg transition-all duration-300 overflow-hidden group"
     >
       {/* Image */}

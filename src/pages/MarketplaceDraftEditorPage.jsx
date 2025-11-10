@@ -1,10 +1,11 @@
 // File: src/pages/MarketplaceDraftEditorPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Eye, Save, Upload, ArrowLeft } from 'lucide-react';
+import { Eye, Save, Upload, ArrowLeft, Edit } from 'lucide-react';
 import { getProducerProfileDraft, updateProducerProfileDraft } from '../api/producerProfileDraftsApi';
 import { createProducerProfile } from '../api/producerProfilesApi';
 import { getTemplateComponent, TEMPLATE_TYPES } from '../components/templates';
+import { generateProfileUrl } from '../utils/urlHelpers';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../utils/constants';
 
@@ -163,7 +164,7 @@ const MarketplaceDraftEditorPage = () => {
 
       const profile = await createProducerProfile(profileData);
       toast.success('Marketplace profile published successfully!');
-      navigate(`/producer/${profile.id}`);
+      navigate(generateProfileUrl(profile.id, profile.name));
     } catch (error) {
       console.error('Error publishing profile:', error);
       toast.error('Failed to publish profile');

@@ -6,6 +6,7 @@ import { Download, Share2, Copy, CheckCircle, Eye, Home, QrCode as QrCodeIcon } 
 import QRCode from 'qrcode';
 import { getStoryById } from '../../api/storiesApi';
 import { APP_URLS, QR_CONFIG } from '../../utils/constants';
+import { generateSlug, generateStoryUrl } from '../../utils/urlHelpers';
 import toast from 'react-hot-toast';
 
 const QRCodeGenerator = () => {
@@ -34,9 +35,10 @@ const QRCodeGenerator = () => {
       setLoading(true);
       const data = await getStoryById(id);
       setStory(data);
-      
-      // Generate story URL
-      const url = `${APP_URLS.STORY_BASE}/${id}`;
+
+      // Generate story URL with name slug
+      const slug = generateSlug(data.name);
+      const url = `${APP_URLS.STORY_BASE}/${id}-${slug}`;
       setStoryUrl(url);
     } catch (error) {
       toast.error('Failed to load story');
@@ -294,7 +296,7 @@ const QRCodeGenerator = () => {
               <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <Link
-                  to={`/story/${id}`}
+                  to={story ? generateStoryUrl(story.id, story.name) : '#'}
                   target="_blank"
                   className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium"
                 >

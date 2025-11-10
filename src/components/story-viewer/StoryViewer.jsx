@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getStoryById } from '../../api/storiesApi';
 import { getTemplateComponent, TEMPLATE_TYPES } from '../templates';
+import { extractIdFromSlug } from '../../utils/urlHelpers';
 import toast from 'react-hot-toast';
 
 const StoryViewer = () => {
-  const { id } = useParams();
+  const { slugId } = useParams();
+  const id = extractIdFromSlug(slugId);
   const [story, setStory] = useState(null);
   const [loading, setLoading] = useState(true);
 

@@ -78,9 +78,9 @@ function App() {
         />
         
         {/* Public Story View - No auth required */}
-        <Route 
-          path={ROUTES.VIEW_STORY} 
-          element={<StoryViewer />} 
+        <Route
+          path="/story/:slugId"
+          element={<StoryViewer />}
         />
 
         {/* Public Marketplace - No auth required */}
@@ -90,11 +90,11 @@ function App() {
         />
 
         {/* Public Producer Profile - No auth required */}
-        <Route 
-          path={ROUTES.PRODUCER_PROFILE} 
+        <Route
+          path="/producer/:slugId"
           element={
             <ProducerProfilePage />
-          } 
+          }
         />
 
         {/* Protected Routes - Require authentication */}

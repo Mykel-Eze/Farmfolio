@@ -7,6 +7,7 @@ import { getStories, deleteStory } from '../api/storiesApi';
 import { getProducerProfiles, deleteProducerProfile } from '../api/producerProfilesApi';
 import { getStoryDrafts, deleteStoryDraft } from '../api/storyDraftsApi';
 import { getProducerProfileDrafts, deleteProducerProfileDraft } from '../api/producerProfileDraftsApi';
+import { generateStoryUrl, generateProfileUrl } from '../utils/urlHelpers';
 import Header from '../components/common/Header';
 import {
   Plus,
@@ -483,7 +484,7 @@ const DashboardPage = () => {
                           {/* Actions */}
                           <div className="grid grid-cols-2 gap-2 pt-4 border-t border-gray-100">
                             <Link
-                              to={`/story/${story.id}`}
+                              to={generateStoryUrl(story.id, story.name)}
                               className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm font-medium"
                             >
                               <Eye className="h-4 w-4" />
@@ -652,7 +653,7 @@ const DashboardPage = () => {
                           </p>
                           <div className="grid grid-cols-3 gap-2">
                             <Link
-                              to={`/producer/${profile.id}`}
+                              to={generateProfileUrl(profile.id, profile.name)}
                               className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm font-medium"
                             >
                               <Eye className="h-4 w-4" />
