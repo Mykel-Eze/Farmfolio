@@ -18,6 +18,22 @@ const ProducerProfileCard = ({ profile }) => {
     console.error('Error parsing profile body:', e);
   }
 
+  // Get thumbnail image from heroImage in body, or mediaFiles, or imageUrl
+  const getThumbnailUrl = () => {
+    // First try heroImage from parsed body
+    if (profileData.heroImage) {
+      return profileData.heroImage;
+    }
+    // Then try first media file
+    if (profile.mediaFiles && profile.mediaFiles.length > 0) {
+      return profile.mediaFiles[0].url;
+    }
+    // Finally try imageUrl
+    return profile.imageUrl || null;
+  };
+
+  const thumbnailUrl = getThumbnailUrl();
+
   // Calculate distance if available
   const formatDistance = (distance) => {
     if (!distance) return null;
@@ -34,9 +50,9 @@ const ProducerProfileCard = ({ profile }) => {
     >
       {/* Image */}
       <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden relative">
-        {profile.imageUrl ? (
+        {thumbnailUrl ? (
           <img
-            src={profile.imageUrl}
+            src={thumbnailUrl}
             alt={profile.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -90,7 +106,7 @@ const ProducerProfileCard = ({ profile }) => {
 
         {/* Description */}
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {profileData.about?.content || profile.body || 'No description available'}
+          {profile.description || 'No description available'}
         </p>
 
         {/* Location */}

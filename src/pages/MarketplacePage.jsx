@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, Filter, Grid, Map as MapIcon, X } from 'lucide-react';
 import { searchProducerProfiles } from '../api/searchApi';
 import { getUserCategories } from '../api/userCategoriesApi';
+import { useAuth } from '../hooks/useAuth';
+import Header from '../components/common/Header';
 import ProducerProfileCard from '../components/marketplace/ProducerProfileCard';
 import MapView from '../components/marketplace/MapView';
 import FilterPanel from '../components/marketplace/FilterPanel';
@@ -14,6 +16,7 @@ import toast from 'react-hot-toast';
 import { PAGINATION } from '../utils/constants';
 
 const MarketplacePage = () => {
+  const { isAuthenticated } = useAuth();
   const [view, setView] = useState('grid'); // 'grid' or 'map'
   const [profiles, setProfiles] = useState([]);
   const [filteredProfiles, setFilteredProfiles] = useState([]);
@@ -34,12 +37,18 @@ const MarketplacePage = () => {
   // Pagination
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     fetchInitialData();
   }, []);
 
   useEffect(() => {
+    // Skip the search on initial load since fetchInitialData handles it
+    if (initialLoad) {
+      setInitialLoad(false);
+      return;
+    }
     handleSearch();
   }, [searchQuery, selectedCategories, locationFilter, page]);
 
@@ -147,6 +156,9 @@ const MarketplacePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/20 to-gray-50">
+      {/* Show Header if authenticated */}
+      {isAuthenticated && <Header />}
+
       {/* Premium Header */}
       <header className="relative overflow-hidden bg-gradient-to-r from-[#83aa45] to-[#a0ad5f] shadow-xl">
         <div className="absolute inset-0 bg-black/5"></div>

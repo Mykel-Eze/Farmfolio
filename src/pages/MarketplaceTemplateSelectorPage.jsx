@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { createProducerProfileDraft } from '../api/producerProfileDraftsApi';
 import { getProducerProfileTemplates } from '../api/producerProfileTemplatesApi';
 import { ROUTES } from '../utils/constants';
+import LocationAutocompleteInput from '../components/common/LocationAutocompleteInput';
 
 const MarketplaceTemplateSelectorPage = () => {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ const MarketplaceTemplateSelectorPage = () => {
   const [showTitleInput, setShowTitleInput] = useState(false);
   const [profileTitle, setProfileTitle] = useState('');
   const [profileDescription, setProfileDescription] = useState('');
+  const [profileLocation, setProfileLocation] = useState('');
+  const [profileLatitude, setProfileLatitude] = useState(null);
+  const [profileLongitude, setProfileLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState([]);
   const [fetchingTemplates, setFetchingTemplates] = useState(true);
@@ -87,6 +91,9 @@ const MarketplaceTemplateSelectorPage = () => {
     setShowTitleInput(false);
     setProfileTitle('');
     setProfileDescription('');
+    setProfileLocation('');
+    setProfileLatitude(null);
+    setProfileLongitude(null);
   };
 
   const handleProceedToTitleInput = () => {
@@ -101,6 +108,10 @@ const MarketplaceTemplateSelectorPage = () => {
     }
     if (!profileDescription.trim()) {
       toast.error('Please enter a profile description');
+      return;
+    }
+    if (!profileLocation.trim()) {
+      toast.error('Please select a location');
       return;
     }
 
@@ -139,7 +150,9 @@ const MarketplaceTemplateSelectorPage = () => {
         name: profileTitle.trim(),
         description: profileDescription.trim(),
         body: defaultBody,
-        location: selectedTemplate.location || '',
+        location: profileLocation.trim(),
+        latitude: profileLatitude || 0,
+        longitude: profileLongitude || 0,
         categoryIds: []
       };
 
@@ -153,6 +166,12 @@ const MarketplaceTemplateSelectorPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLocationSelect = (locationData) => {
+    setProfileLocation(locationData.address);
+    setProfileLatitude(locationData.latitude);
+    setProfileLongitude(locationData.longitude);
   };
 
   if (fetchingTemplates) {
@@ -220,9 +239,25 @@ const MarketplaceTemplateSelectorPage = () => {
                 />
               </div>
 
+              <div>
+                <label htmlFor="profileLocation" className="block text-sm font-medium text-gray-700 mb-2">
+                  Location
+                </label>
+                <LocationAutocompleteInput
+                  value={profileLocation}
+                  onChange={setProfileLocation}
+                  onLocationSelect={handleLocationSelect}
+                  placeholder="Search for your location..."
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Select your location to help customers find you
+                </p>
+              </div>
+
               <button
                 onClick={handleEditTemplate}
-                disabled={loading || !profileTitle.trim() || !profileDescription.trim()}
+                disabled={loading || !profileTitle.trim() || !profileDescription.trim() || !profileLocation.trim()}
                 className="w-full py-3 px-4 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating Draft...' : 'Create & Edit Profile'}

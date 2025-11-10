@@ -1,8 +1,8 @@
 // File: src/components/marketplace/MapView.jsx
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-import { MapPin, Phone, Mail, ExternalLink, Navigation } from 'lucide-react';
+import { MapPin, Phone, Mail, ExternalLink, Navigation, Search, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MAPS_CONFIG } from '../../utils/constants';
 import { generateProfileUrl } from '../../utils/urlHelpers';
@@ -25,6 +25,11 @@ const MapView = ({ profiles }) => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [map, setMap] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [locationSearchQuery, setLocationSearchQuery] = useState('');
+  const [showSearchPanel, setShowSearchPanel] = useState(false);
+  const locationInputRef = useRef(null);
+  const locationAutocompleteRef = useRef(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: MAPS_CONFIG.API_KEY,
@@ -33,8 +38,8 @@ const MapView = ({ profiles }) => {
 
   const onLoad = useCallback((map) => {
     setMap(map);
-    
-    // Try to get user's location
+
+    // Try to get user's location and zoom in
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -43,12 +48,37 @@ const MapView = ({ profiles }) => {
             lng: position.coords.longitude,
           };
           setUserLocation(userPos);
+          // Zoom to user location
+          map.panTo(userPos);
+          map.setZoom(12);
         },
         (error) => {
           console.log('Geolocation error:', error);
         }
       );
     }
+
+    // Initialize location search autocomplete after map loads
+    setTimeout(() => {
+      if (locationInputRef.current && window.google?.maps?.places) {
+        const autocomplete = new window.google.maps.places.Autocomplete(locationInputRef.current, {
+          types: ['geocode', 'establishment'],
+          fields: ['formatted_address', 'geometry', 'name'],
+        });
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (place.geometry && place.geometry.location) {
+            const location = place.geometry.location;
+            map.panTo({ lat: location.lat(), lng: location.lng() });
+            map.setZoom(13);
+            setLocationSearchQuery(place.formatted_address || place.name || '');
+          }
+        });
+
+        locationAutocompleteRef.current = autocomplete;
+      }
+    }, 100);
   }, []);
 
   const onUnmount = useCallback(() => {
@@ -99,6 +129,42 @@ const MapView = ({ profiles }) => {
     }
   };
 
+  const handleProducerSearch = (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    // Find matching producer
+    const matchingProfile = validProfiles.find(profile =>
+      profile.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (matchingProfile && map) {
+      // Pan to the producer's location
+      map.panTo({
+        lat: matchingProfile.latitude,
+        lng: matchingProfile.longitude,
+      });
+      map.setZoom(15);
+      // Select the profile to show info window
+      setSelectedProfile(matchingProfile);
+    }
+  };
+
+  const clearSearches = () => {
+    setSearchQuery('');
+    setLocationSearchQuery('');
+    if (locationInputRef.current) {
+      locationInputRef.current.value = '';
+    }
+  };
+
+  // Filter profiles based on search query
+  const filteredProfiles = searchQuery.trim()
+    ? validProfiles.filter(profile =>
+        profile.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : validProfiles;
+
   if (loadError) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
@@ -126,6 +192,98 @@ const MapView = ({ profiles }) => {
 
   return (
     <div className="relative">
+      {/* Search Panel Toggle */}
+      <button
+        onClick={() => setShowSearchPanel(!showSearchPanel)}
+        className="absolute top-4 left-4 z-20 bg-white shadow-lg rounded-lg p-3 hover:bg-gray-50 transition-colors"
+        title="Search locations and producers"
+      >
+        <Search className="h-5 w-5 text-[#83aa45]" />
+      </button>
+
+      {/* Search Panel */}
+      {showSearchPanel && (
+        <div className="absolute top-4 left-20 z-20 bg-white shadow-xl rounded-xl p-4 w-80 max-w-[calc(100vw-120px)]">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-gray-900">Search Map</h3>
+            <button
+              onClick={() => setShowSearchPanel(false)}
+              className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <X className="h-4 w-4 text-gray-500" />
+            </button>
+          </div>
+
+          {/* Area Search */}
+          <div className="mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Search Area
+            </label>
+            <input
+              ref={locationInputRef}
+              type="text"
+              placeholder="Enter location or address..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83aa45] focus:border-transparent text-sm"
+              onChange={(e) => setLocationSearchQuery(e.target.value)}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Search for a specific area to explore
+            </p>
+          </div>
+
+          {/* Producer Search */}
+          <div className="mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Search Producer
+            </label>
+            <form onSubmit={handleProducerSearch}>
+              <input
+                type="text"
+                placeholder="Enter producer name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83aa45] focus:border-transparent text-sm"
+              />
+            </form>
+            <p className="text-xs text-gray-500 mt-1">
+              Find and locate a specific producer
+            </p>
+          </div>
+
+          {/* Clear Button */}
+          {(searchQuery || locationSearchQuery) && (
+            <button
+              onClick={clearSearches}
+              className="w-full py-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+            >
+              Clear Searches
+            </button>
+          )}
+
+          {/* Matching Results */}
+          {searchQuery && filteredProfiles.length > 0 && (
+            <div className="mt-3 max-h-40 overflow-y-auto border-t border-gray-200 pt-2">
+              <p className="text-xs font-medium text-gray-600 mb-2">
+                {filteredProfiles.length} result{filteredProfiles.length !== 1 ? 's' : ''}:
+              </p>
+              {filteredProfiles.map((profile) => (
+                <button
+                  key={profile.id}
+                  onClick={() => {
+                    map?.panTo({ lat: profile.latitude, lng: profile.longitude });
+                    map?.setZoom(15);
+                    setSelectedProfile(profile);
+                  }}
+                  className="w-full text-left px-2 py-1.5 hover:bg-gray-50 rounded text-sm text-gray-700"
+                >
+                  {profile.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Map Controls */}
       {userLocation && (
         <button
@@ -138,9 +296,9 @@ const MapView = ({ profiles }) => {
       )}
 
       {/* Profile Count */}
-      <div className="absolute top-4 left-4 z-10 bg-white shadow-lg rounded-lg px-4 py-2">
+      <div className="absolute bottom-4 left-4 z-10 bg-white shadow-lg rounded-lg px-4 py-2">
         <p className="text-sm font-medium text-gray-900">
-          {validProfiles.length} producer{validProfiles.length !== 1 ? 's' : ''} on map
+          {filteredProfiles.length} producer{filteredProfiles.length !== 1 ? 's' : ''} {searchQuery ? 'found' : 'on map'}
         </p>
       </div>
 
@@ -170,7 +328,7 @@ const MapView = ({ profiles }) => {
         )}
 
         {/* Producer Markers */}
-        {validProfiles.map((profile) => (
+        {filteredProfiles.map((profile) => (
           <Marker
             key={profile.id}
             position={{
@@ -256,13 +414,18 @@ const MapView = ({ profiles }) => {
       </GoogleMap>
 
       {/* No Locations Message */}
-      {validProfiles.length === 0 && (
+      {filteredProfiles.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="bg-white shadow-lg rounded-xl p-6 text-center">
             <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-900 font-medium mb-1">No locations to display</p>
+            <p className="text-gray-900 font-medium mb-1">
+              {searchQuery ? 'No producers found' : 'No locations to display'}
+            </p>
             <p className="text-sm text-gray-600">
-              Producers without location data won't appear on the map
+              {searchQuery
+                ? 'Try adjusting your search query'
+                : 'Producers without location data won\'t appear on the map'
+              }
             </p>
           </div>
         </div>

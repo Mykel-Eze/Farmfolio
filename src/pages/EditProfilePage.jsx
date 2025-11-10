@@ -7,13 +7,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ArrowLeft, Save, Upload, X, MapPin, Plus, Trash2 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
-import { 
-  getProducerProfiles, 
-  createProducerProfile, 
-  updateProducerProfile 
+import {
+  getProducerProfiles,
+  createProducerProfile,
+  updateProducerProfile
 } from '../api/producerProfilesApi';
 import { getUserCategories } from '../api/userCategoriesApi';
 import { useAuth } from '../hooks/useAuth';
+import LocationAutocompleteInput from '../components/common/LocationAutocompleteInput';
 import toast from 'react-hot-toast';
 
 const EditProfilePage = () => {
@@ -126,6 +127,12 @@ const EditProfilePage = () => {
       URL.revokeObjectURL(image.preview);
     }
     setUploadedImages(uploadedImages.filter(img => img.id !== id));
+  };
+
+  const handleLocationSelect = (locationData) => {
+    formik.setFieldValue('location', locationData.address);
+    formik.setFieldValue('latitude', locationData.latitude);
+    formik.setFieldValue('longitude', locationData.longitude);
   };
 
   const handleDetectLocation = () => {
@@ -298,48 +305,45 @@ const EditProfilePage = () => {
           {/* Location */}
           <div className="bg-white rounded-xl shadow-soft p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Location</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="label">Address *</label>
-                <input
-                  type="text"
-                  {...formik.getFieldProps('location')}
-                  className={`input ${formik.touched.location && formik.errors.location ? 'input-error' : ''}`}
-                  placeholder="Full address or general location"
+                <LocationAutocompleteInput
+                  value={formik.values.location}
+                  onChange={(value) => formik.setFieldValue('location', value)}
+                  onLocationSelect={handleLocationSelect}
+                  placeholder="Search for your location..."
+                  error={formik.touched.location && formik.errors.location ? formik.errors.location : ''}
                 />
-                {formik.touched.location && formik.errors.location && (
-                  <p className="error-message">{formik.errors.location}</p>
-                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Search and select your location from Google Places
+                </p>
               </div>
 
               <div>
-                <label className="label">Map Coordinates (Optional)</label>
+                <label className="label">Map Coordinates</label>
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="number"
                     step="any"
                     {...formik.getFieldProps('latitude')}
-                    className="input"
+                    className="input bg-gray-50"
                     placeholder="Latitude"
+                    readOnly
                   />
                   <input
                     type="number"
                     step="any"
                     {...formik.getFieldProps('longitude')}
-                    className="input"
+                    className="input bg-gray-50"
                     placeholder="Longitude"
+                    readOnly
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={handleDetectLocation}
-                  disabled={detectingLocation}
-                  className="mt-2 flex items-center text-sm text-[#83aa45] hover:text-[#98c253] transition-colors"
-                >
-                  <MapPin className="h-4 w-4 mr-1" />
-                  {detectingLocation ? 'Detecting...' : 'Detect My Location'}
-                </button>
+                <p className="text-xs text-gray-500 mt-1">
+                  Automatically filled when you select a location above
+                </p>
               </div>
             </div>
           </div>

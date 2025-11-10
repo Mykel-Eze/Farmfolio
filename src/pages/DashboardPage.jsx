@@ -43,22 +43,51 @@ const DashboardPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [storiesData, profilesData, storyDraftsData, profileDraftsData] = await Promise.all([
-        getStories(false), // Only user's stories
-        getProducerProfiles(false), // Only user's profiles
-        getStoryDrafts(null, false), // Only user's story drafts
-        getProducerProfileDrafts(null, false), // Only user's profile drafts
-      ]);
 
-      // Sort all data by date (latest first)
+      // Sort helper function
       const sortByDate = (arr) => arr.sort((a, b) =>
         new Date(b.dateCreated || b.dateModified) - new Date(a.dateCreated || a.dateModified)
       );
 
-      setStories(sortByDate(storiesData || []));
-      setProfiles(sortByDate(profilesData || []));
-      setStoryDrafts(sortByDate(storyDraftsData || []));
-      setProfileDrafts(sortByDate(profileDraftsData || []));
+      // Load data sequentially with individual error handling
+      // This prevents one slow/failing request from blocking others
+
+      // 1. Load published stories
+      try {
+        const storiesData = await getStories(false);
+        setStories(sortByDate(storiesData || []));
+      } catch (error) {
+        console.error('Error loading stories:', error);
+        setStories([]);
+      }
+
+      // 2. Load published profiles
+      try {
+        const profilesData = await getProducerProfiles(false);
+        setProfiles(sortByDate(profilesData || []));
+      } catch (error) {
+        console.error('Error loading profiles:', error);
+        setProfiles([]);
+      }
+
+      // 3. Load story drafts
+      try {
+        const storyDraftsData = await getStoryDrafts(null, false);
+        setStoryDrafts(sortByDate(storyDraftsData || []));
+      } catch (error) {
+        console.error('Error loading story drafts:', error);
+        setStoryDrafts([]);
+      }
+
+      // 4. Load profile drafts
+      try {
+        const profileDraftsData = await getProducerProfileDrafts(null, false);
+        setProfileDrafts(sortByDate(profileDraftsData || []));
+      } catch (error) {
+        console.error('Error loading profile drafts:', error);
+        setProfileDrafts([]);
+      }
+
     } catch (error) {
       toast.error('Failed to load dashboard data');
       console.error('Error fetching data:', error);
@@ -175,9 +204,12 @@ const DashboardPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
+        <div className="text-center max-w-md px-4">
           <div className="spinner spinner-lg border-[#83aa45]"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <p className="mt-4 text-gray-600 font-medium">Loading dashboard...</p>
+          <p className="mt-2 text-sm text-gray-500">
+            First load may take a moment while the server wakes up
+          </p>
         </div>
       </div>
     );
