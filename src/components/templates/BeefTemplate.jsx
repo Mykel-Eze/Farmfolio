@@ -1,6 +1,7 @@
 // File: src/components/templates/BeefTemplate.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './BeefTemplate.css';
@@ -12,6 +13,7 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
   const sectionsRef = useRef([]);
   const fileInputRef = useRef(null);
   const [currentImageField, setCurrentImageField] = useState(null);
+  const [activeField, setActiveField] = useState(null);
 
   // Parse data from backend (JSON string) - handle escaped JSON
   let content = data?.body || {};
@@ -156,6 +158,25 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
     }
   };
 
+  const handleFieldFocus = (field, event) => {
+    if (isEditMode) {
+      setActiveField(field);
+      // Store the element's position for positioning the AI button
+      const rect = event.target.getBoundingClientRect();
+      setActiveField({ field, rect });
+    }
+  };
+
+  const handleFieldBlur = () => {
+    // Delay hiding to allow clicking the AI button
+    setTimeout(() => setActiveField(null), 200);
+  };
+
+  const handleAIHelp = () => {
+    // Placeholder for future AI functionality
+    console.log('AI help requested for field:', activeField?.field);
+  };
+
   const handleImageClick = (field) => {
     if (!isEditMode) return;
     setCurrentImageField(field);
@@ -194,10 +215,9 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
       {/* Navbar */}
       <header className="beef-navbar">
         <div className="beef-logo">
-          <img
-            src="/farmfolio.png"
-            alt="Logo"
-          />
+          <Link to="/">
+            <img src="/farmfolio.png" alt="Logo" />
+          </Link>
         </div>
 
         <Link to="/marketplace" className="marketplace-link">
@@ -222,7 +242,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
           <h1
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('heroTitle', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('heroTitle', e)}
+            onBlur={(e) => {
+              handleEditClick('heroTitle', e.target.textContent);
+              handleFieldBlur();
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroTitle}
@@ -230,7 +254,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('heroSubtitle', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('heroSubtitle', e)}
+            onBlur={(e) => {
+              handleEditClick('heroSubtitle', e.target.textContent);
+              handleFieldBlur();
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroSubtitle}
@@ -255,7 +283,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('aboutText', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('aboutText', e)}
+            onBlur={(e) => {
+              handleEditClick('aboutText', e.target.textContent);
+              handleFieldBlur();
+            }}
           >
             {templateData.aboutText}
           </p>
@@ -293,7 +325,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
                 <p
                   contentEditable={isEditMode}
                   suppressContentEditableWarning
-                  onBlur={(e) => handleEditClick(`steps.${index}.text`, e.target.textContent)}
+                  onFocus={(e) => handleFieldFocus(`steps.${index}.text`, e)}
+                  onBlur={(e) => {
+                    handleEditClick(`steps.${index}.text`, e.target.textContent);
+                    handleFieldBlur();
+                  }}
                 >
                   {step.text}
                 </p>
@@ -352,7 +388,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('recipesText', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('recipesText', e)}
+            onBlur={(e) => {
+              handleEditClick('recipesText', e.target.textContent);
+              handleFieldBlur();
+            }}
           >
             {templateData.recipesText}
           </p>
@@ -372,7 +412,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
               <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`testimonials.${index}.quote`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`testimonials.${index}.quote`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`testimonials.${index}.quote`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 "{testimonial.quote}"
               </span>
@@ -380,7 +424,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
                 className="beef-author"
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`testimonials.${index}.author`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`testimonials.${index}.author`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`testimonials.${index}.author`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 — {testimonial.author}
               </span>
@@ -427,7 +475,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Email:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactEmail', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactEmail', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactEmail', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactEmail}
               </span>
@@ -436,7 +488,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Phone:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactPhone', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactPhone', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactPhone', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactPhone}
               </span>
@@ -445,7 +501,11 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Location:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactLocation', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactLocation', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactLocation', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactLocation}
               </span>
@@ -457,6 +517,21 @@ const BeefTemplate = ({ data, isEditMode = false, onEdit }) => {
         </div>
         <p className="beef-footer-bottom">&copy; 2025 PrimeCuts. Crafted with Passion.</p>
       </footer>
+
+      {/* AI Help Button - appears when editing text fields */}
+      {isEditMode && activeField && (
+        <button
+          onClick={handleAIHelp}
+          className="fixed z-50 flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg shadow-lg hover:bg-purple-700 transition-all text-sm font-medium"
+          style={{
+            top: `${activeField.rect?.top - 50}px`,
+            left: `${activeField.rect?.left}px`,
+          }}
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>AI Help</span>
+        </button>
+      )}
     </div>
   );
 };

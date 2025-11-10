@@ -1,33 +1,30 @@
-// File: src/pages/MarketplaceDraftEditorPage.jsx
+// File: src/pages/StoryEditorPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Eye, Save, Upload, ArrowLeft } from 'lucide-react';
-import { getProducerProfileDraft, updateProducerProfileDraft } from '../api/producerProfileDraftsApi';
-import { createProducerProfile } from '../api/producerProfilesApi';
+import { Eye, Save, ArrowLeft, Edit } from 'lucide-react';
+import { getStoryById, updateStory } from '../api/storiesApi';
 import { getTemplateComponent, TEMPLATE_TYPES } from '../components/templates';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../utils/constants';
 
-const MarketplaceDraftEditorPage = () => {
+const StoryEditorPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [draft, setDraft] = useState(null);
+  const [story, setStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [publishing, setPublishing] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [editedContent, setEditedContent] = useState({});
-  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
 
   useEffect(() => {
-    loadDraft();
+    loadStory();
   }, [id]);
 
-  const loadDraft = async () => {
+  const loadStory = async () => {
     try {
       setLoading(true);
-      const data = await getProducerProfileDraft(id);
-      setDraft(data);
+      const data = await getStoryById(id);
+      setStory(data);
 
       // Parse the body - handle escaped JSON from backend
       let parsedBody = data.body;
@@ -47,9 +44,9 @@ const MarketplaceDraftEditorPage = () => {
             parsedBody = JSON.parse(parsedBody);
           }
         } catch (parseError) {
-          console.error('Error parsing draft body:', parseError);
+          console.error('Error parsing story body:', parseError);
           console.error('Raw body value:', data.body);
-          toast.error('Draft data is corrupted. Please contact support.');
+          toast.error('Story data is corrupted. Please contact support.');
           navigate(ROUTES.DASHBOARD);
           return;
         }
@@ -57,8 +54,8 @@ const MarketplaceDraftEditorPage = () => {
 
       setEditedContent(parsedBody || {});
     } catch (error) {
-      console.error('Error loading draft:', error);
-      toast.error('Failed to load draft');
+      console.error('Error loading story:', error);
+      toast.error('Failed to load story');
       navigate(ROUTES.DASHBOARD);
     } finally {
       setLoading(false);
@@ -116,59 +113,27 @@ const MarketplaceDraftEditorPage = () => {
     });
   };
 
-  const handleSaveDraft = async () => {
+  const handleSaveStory = async () => {
     try {
       setSaving(true);
 
       const updatedData = {
-        producerProfileTemplateId: draft.producerProfileTemplateId,
-        name: draft.name,
-        description: draft.description || 'No description provided',
-        body: JSON.stringify(editedContent),
-        location: draft.location || '',
-        categoryIds: draft.categoryIds || []
+        storyTemplateId: story.storyTemplateId,
+        name: story.name,
+        description: story.description || 'No description provided',
+        body: JSON.stringify(editedContent)
       };
 
-      await updateProducerProfileDraft(id, updatedData);
-      toast.success('Draft saved successfully!');
-      await loadDraft();
+      await updateStory(id, updatedData);
+      toast.success('Story updated successfully!');
+
+      // Reload story to get updated data
+      await loadStory();
     } catch (error) {
-      console.error('Error saving draft:', error);
-      toast.error('Failed to save draft');
+      console.error('Error saving story:', error);
+      toast.error('Failed to save story');
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handlePublish = () => {
-    setShowPublishConfirm(true);
-  };
-
-  const confirmPublish = async () => {
-    try {
-      setPublishing(true);
-      setShowPublishConfirm(false);
-
-      const profileData = {
-        producerProfileDraftId: parseInt(id),
-        producerProfileTemplateId: draft.producerProfileTemplateId,
-        name: draft.name,
-        description: draft.description || 'No description provided',
-        body: JSON.stringify(editedContent),
-        location: draft.location || '',
-        latitude: draft.latitude || 0,
-        longitude: draft.longitude || 0,
-        categoryIds: draft.categoryIds || []
-      };
-
-      const profile = await createProducerProfile(profileData);
-      toast.success('Marketplace profile published successfully!');
-      navigate(`/producer/${profile.id}`);
-    } catch (error) {
-      console.error('Error publishing profile:', error);
-      toast.error('Failed to publish profile');
-    } finally {
-      setPublishing(false);
     }
   };
 
@@ -183,11 +148,11 @@ const MarketplaceDraftEditorPage = () => {
     );
   }
 
-  if (!draft) {
+  if (!story) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-gray-600">Draft not found</p>
+          <p className="text-gray-600">Story not found</p>
           <button
             onClick={() => navigate(ROUTES.DASHBOARD)}
             className="mt-4 px-6 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-[#7A8449]"
@@ -199,18 +164,17 @@ const MarketplaceDraftEditorPage = () => {
     );
   }
 
-  const TemplateComponent = getTemplateComponent(
-    draft.producerProfileTemplateId,
-    TEMPLATE_TYPES.MARKETPLACE
-  );
+  const TemplateComponent = getTemplateComponent(story.storyTemplateId, TEMPLATE_TYPES.STORY);
 
+  // Prepare data for template
   const templateData = {
-    ...draft,
+    ...story,
     body: editedContent
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Top Bar */}
       <div className="fixed top-0 left-0 right-0 bg-white shadow-md z-50 px-4 sm:px-6 py-3 sm:py-4 z-1">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
@@ -223,7 +187,7 @@ const MarketplaceDraftEditorPage = () => {
             </button>
 
             <h1 className="text-sm sm:text-xl font-semibold text-gray-900 order-first sm:order-none truncate max-w-full sm:max-w-md">
-              {isPreviewMode ? 'Preview' : 'Edit'} - {draft.name}
+              {isPreviewMode ? 'Preview' : 'Edit'} - {story.name}
             </h1>
 
             <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
@@ -240,29 +204,20 @@ const MarketplaceDraftEditorPage = () => {
               </button>
 
               <button
-                onClick={handleSaveDraft}
+                onClick={handleSaveStory}
                 disabled={saving}
-                className="flex items-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 text-xs sm:text-base flex-1 sm:flex-initial justify-center"
-              >
-                <Save className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
-                <span className="hidden sm:inline">{saving ? 'Saving...' : 'Save'}</span>
-                <span className="sm:hidden">{saving ? '...' : 'Save'}</span>
-              </button>
-
-              <button
-                onClick={handlePublish}
-                disabled={publishing}
                 className="flex items-center px-3 sm:px-4 py-2 bg-[#83aa45] text-white rounded-lg hover:bg-[#7A8449] transition-colors disabled:opacity-50 text-xs sm:text-base flex-1 sm:flex-initial justify-center"
               >
-                <Upload className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
-                <span className="hidden sm:inline">{publishing ? 'Publishing...' : 'Publish'}</span>
-                <span className="sm:hidden">{publishing ? '...' : 'Publish'}</span>
+                <Save className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                <span className="hidden sm:inline">{saving ? 'Saving...' : 'Save Changes'}</span>
+                <span className="sm:hidden">{saving ? '...' : 'Save'}</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Template Render */}
       <div className="pt-[110px] md:pt-[73px]">
         <TemplateComponent
           data={templateData}
@@ -270,45 +225,8 @@ const MarketplaceDraftEditorPage = () => {
           onEdit={handleEdit}
         />
       </div>
-
-      {/* Publish Confirmation Modal */}
-      {showPublishConfirm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 animate-fade-in">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 rounded-full bg-[#83aa45]/10 flex items-center justify-center flex-shrink-0">
-                <Upload className="h-6 w-6 text-[#83aa45]" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Publish Marketplace Profile?
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Your marketplace profile will be published and visible to all customers searching for producers like you.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowPublishConfirm(false)}
-                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmPublish}
-                disabled={publishing}
-                className="flex-1 px-4 py-3 bg-[#83aa45] text-white rounded-xl font-semibold hover:bg-[#7A8449] transition-colors disabled:opacity-50"
-              >
-                {publishing ? 'Publishing...' : 'Publish'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default MarketplaceDraftEditorPage;
+export default StoryEditorPage;

@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 // File: src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { getStories, deleteStory } from '../api/storiesApi';
-import { getProducerProfiles } from '../api/producerProfilesApi';
+import { getProducerProfiles, deleteProducerProfile } from '../api/producerProfilesApi';
 import { getStoryDrafts, deleteStoryDraft } from '../api/storyDraftsApi';
 import { getProducerProfileDrafts, deleteProducerProfileDraft } from '../api/producerProfileDraftsApi';
 import Header from '../components/common/Header';
@@ -32,6 +33,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('stories');
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -46,10 +48,16 @@ const DashboardPage = () => {
         getStoryDrafts(null, false), // Only user's story drafts
         getProducerProfileDrafts(null, false), // Only user's profile drafts
       ]);
-      setStories(storiesData || []);
-      setProfiles(profilesData || []);
-      setStoryDrafts(storyDraftsData || []);
-      setProfileDrafts(profileDraftsData || []);
+
+      // Sort all data by date (latest first)
+      const sortByDate = (arr) => arr.sort((a, b) =>
+        new Date(b.dateCreated || b.dateModified) - new Date(a.dateCreated || a.dateModified)
+      );
+
+      setStories(sortByDate(storiesData || []));
+      setProfiles(sortByDate(profilesData || []));
+      setStoryDrafts(sortByDate(storyDraftsData || []));
+      setProfileDrafts(sortByDate(profileDraftsData || []));
     } catch (error) {
       toast.error('Failed to load dashboard data');
       console.error('Error fetching data:', error);
@@ -58,42 +66,98 @@ const DashboardPage = () => {
     }
   };
 
-  const handleDeleteStory = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this story?')) return;
-
+  // Helper to extract hero image from body JSON
+  const getHeroImage = (item) => {
     try {
-      await deleteStory(id);
-      setStories(stories.filter(story => story.id !== id));
-      toast.success('Story deleted successfully');
+      let body = item.body;
+
+      if (typeof body === 'string') {
+        if (body.trim().startsWith('{') || body.trim().startsWith('[')) {
+          body = body.replace(/\\"/g, '"');
+        }
+        body = JSON.parse(body);
+        if (typeof body === 'string') {
+          body = JSON.parse(body);
+        }
+      }
+
+      return body?.heroImage || null;
     } catch (error) {
-      toast.error('Failed to delete story');
-      console.error('Error deleting story:', error);
+      return null;
     }
+  };
+
+  const handleDeleteStory = async (id) => {
+    setDeleteConfirm({
+      type: 'story',
+      id,
+      title: 'Are you sure you want to delete this story?',
+      description: 'This action cannot be undone. All existing links and QR codes will no longer work. Visitors will see an error when trying to access this story.'
+    });
+  };
+
+  const handleDeleteProfile = async (id) => {
+    setDeleteConfirm({
+      type: 'profile',
+      id,
+      title: 'Are you sure you want to delete this profile?',
+      description: 'This action cannot be undone. Your profile will be removed from the marketplace and will no longer be visible to customers.'
+    });
   };
 
   const handleDeleteStoryDraft = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this draft?')) return;
-
-    try {
-      await deleteStoryDraft(id);
-      setStoryDrafts(storyDrafts.filter(draft => draft.id !== id));
-      toast.success('Draft deleted successfully');
-    } catch (error) {
-      toast.error('Failed to delete draft');
-      console.error('Error deleting draft:', error);
-    }
+    setDeleteConfirm({
+      type: 'storyDraft',
+      id,
+      title: 'Are you sure you want to delete this draft?',
+      description: 'This action cannot be undone. All unsaved changes in this draft will be permanently lost.'
+    });
   };
 
   const handleDeleteProfileDraft = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this draft?')) return;
+    setDeleteConfirm({
+      type: 'profileDraft',
+      id,
+      title: 'Are you sure you want to delete this draft?',
+      description: 'This action cannot be undone. All unsaved changes in this draft will be permanently lost.'
+    });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
 
     try {
-      await deleteProducerProfileDraft(id);
-      setProfileDrafts(profileDrafts.filter(draft => draft.id !== id));
-      toast.success('Draft deleted successfully');
+      const { type, id } = deleteConfirm;
+
+      switch (type) {
+        case 'story':
+          await deleteStory(id);
+          setStories(stories.filter(story => story.id !== id));
+          toast.success('Story deleted successfully');
+          break;
+        case 'profile':
+          await deleteProducerProfile(id);
+          setProfiles(profiles.filter(profile => profile.id !== id));
+          toast.success('Profile deleted successfully');
+          break;
+        case 'storyDraft':
+          await deleteStoryDraft(id);
+          setStoryDrafts(storyDrafts.filter(draft => draft.id !== id));
+          toast.success('Draft deleted successfully');
+          break;
+        case 'profileDraft':
+          await deleteProducerProfileDraft(id);
+          setProfileDrafts(profileDrafts.filter(draft => draft.id !== id));
+          toast.success('Draft deleted successfully');
+          break;
+        default:
+          break;
+      }
+
+      setDeleteConfirm(null);
     } catch (error) {
-      toast.error('Failed to delete draft');
-      console.error('Error deleting draft:', error);
+      toast.error('Failed to delete');
+      console.error('Error deleting:', error);
     }
   };
 
@@ -393,9 +457,9 @@ const DashboardPage = () => {
                       >
                         {/* Story Image */}
                         <div className="relative h-48 sm:h-56 bg-gradient-to-br from-[#83aa45]/20 to-[#a0ad5f]/20 overflow-hidden">
-                          {story.imageUrl ? (
+                          {getHeroImage(story) ? (
                             <img
-                              src={story.imageUrl}
+                              src={getHeroImage(story)}
                               alt={story.name}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
@@ -413,7 +477,7 @@ const DashboardPage = () => {
                             {story.name}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
-                            {story.body || 'No description available'}
+                            {story.description || 'No description available'}
                           </p>
 
                           {/* Actions */}
@@ -424,6 +488,13 @@ const DashboardPage = () => {
                             >
                               <Eye className="h-4 w-4" />
                               <span>View</span>
+                            </Link>
+                            <Link
+                              to={`/story/edit/${story.id}`}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-xs sm:text-sm font-medium"
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span>Edit</span>
                             </Link>
                             <Link
                               to={`/story/${story.id}/qr`}
@@ -480,9 +551,19 @@ const DashboardPage = () => {
                           </span>
                         </div>
 
-                        <div className="relative h-48 sm:h-56 bg-gradient-to-br from-amber-100 to-yellow-100 flex items-center justify-center overflow-hidden">
+                        <div className="relative h-48 sm:h-56 bg-gradient-to-br from-amber-100 to-yellow-100 overflow-hidden">
+                          {getHeroImage(draft) ? (
+                            <img
+                              src={getHeroImage(draft)}
+                              alt={draft.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <FileClock className="h-20 w-20 text-amber-400" />
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-yellow-400/20"></div>
-                          <FileClock className="relative h-20 w-20 text-amber-400 group-hover:scale-110 transition-transform" />
                         </div>
 
                         <div className="p-5 sm:p-6 bg-white">
@@ -543,10 +624,18 @@ const DashboardPage = () => {
                         className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:-translate-y-1"
                       >
                         <div className="relative h-40 sm:h-48 bg-gradient-to-br from-slate-600 to-slate-800 overflow-hidden">
+                          {getHeroImage(profile) ? (
+                            <img
+                              src={getHeroImage(profile)}
+                              alt={profile.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Store className="h-16 w-16 sm:h-20 sm:w-20 text-white/40" />
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-gradient-to-br from-slate-700/50 to-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <Store className="h-16 w-16 sm:h-20 sm:w-20 text-white/40" />
-                          </div>
                         </div>
                         <div className="p-5 sm:p-6">
                           <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 group-hover:text-slate-700 transition-colors">
@@ -559,23 +648,30 @@ const DashboardPage = () => {
                             </p>
                           </div>
                           <p className="text-xs sm:text-sm text-gray-600 mb-6 line-clamp-2 leading-relaxed">
-                            {profile.body || 'No description available'}
+                            {profile.description || 'No description available'}
                           </p>
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-3 gap-2">
                             <Link
                               to={`/producer/${profile.id}`}
-                              className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all"
+                              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-xs sm:text-sm font-medium"
                             >
                               <Eye className="h-4 w-4" />
                               <span>View</span>
                             </Link>
                             <Link
                               to={`/profile/edit-draft/${profile.id}`}
-                              className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all"
+                              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-xs sm:text-sm font-medium"
                             >
                               <Edit className="h-4 w-4" />
                               <span>Edit</span>
                             </Link>
+                            <button
+                              onClick={() => handleDeleteProfile(profile.id)}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors text-xs sm:text-sm font-medium"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span>Delete</span>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -617,9 +713,19 @@ const DashboardPage = () => {
                           </span>
                         </div>
 
-                        <div className="relative h-40 sm:h-48 bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center overflow-hidden">
+                        <div className="relative h-40 sm:h-48 bg-gradient-to-br from-orange-100 to-red-100 overflow-hidden">
+                          {getHeroImage(draft) ? (
+                            <img
+                              src={getHeroImage(draft)}
+                              alt={draft.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <FileClock className="h-20 w-20 text-orange-400" />
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-red-400/20"></div>
-                          <FileClock className="relative h-20 w-20 text-orange-400 group-hover:scale-110 transition-transform" />
                         </div>
 
                         <div className="p-5 sm:p-6 bg-white">
@@ -658,6 +764,42 @@ const DashboardPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 animate-fade-in">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                <Trash2 className="h-6 w-6 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {deleteConfirm.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {deleteConfirm.description}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

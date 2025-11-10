@@ -14,6 +14,7 @@ const StoryTemplateSelectorPage = () => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [showTitleInput, setShowTitleInput] = useState(false);
   const [storyTitle, setStoryTitle] = useState('');
+  const [storyDescription, setStoryDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState([]);
   const [fetchingTemplates, setFetchingTemplates] = useState(true);
@@ -85,6 +86,7 @@ const StoryTemplateSelectorPage = () => {
     setSelectedTemplate(null);
     setShowTitleInput(false);
     setStoryTitle('');
+    setStoryDescription('');
   };
 
   const handleProceedToTitleInput = () => {
@@ -95,6 +97,10 @@ const StoryTemplateSelectorPage = () => {
     if (!selectedTemplate) return;
     if (!storyTitle.trim()) {
       toast.error('Please enter a story title');
+      return;
+    }
+    if (!storyDescription.trim()) {
+      toast.error('Please enter a story description');
       return;
     }
 
@@ -132,6 +138,7 @@ const StoryTemplateSelectorPage = () => {
       const draftData = {
         storyTemplateId: selectedTemplate.id,
         name: storyTitle.trim(),
+        description: storyDescription.trim(),
         body: defaultBody
       };
 
@@ -181,7 +188,7 @@ const StoryTemplateSelectorPage = () => {
             <div className="text-center mb-6">
               <Sparkles className="h-12 w-12 mx-auto text-[#83aa45] mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Name Your Story</h2>
-              <p className="text-gray-600">Give your story a memorable title</p>
+              <p className="text-gray-600">Give your story a memorable title and description</p>
             </div>
 
             <div className="space-y-4">
@@ -200,9 +207,23 @@ const StoryTemplateSelectorPage = () => {
                 />
               </div>
 
+              <div>
+                <label htmlFor="storyDescription" className="block text-sm font-medium text-gray-700 mb-2">
+                  Story Description
+                </label>
+                <textarea
+                  id="storyDescription"
+                  value={storyDescription}
+                  onChange={(e) => setStoryDescription(e.target.value)}
+                  placeholder="e.g., A story about our sustainable farming practices and commitment to quality"
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83aa45] focus:border-transparent resize-none"
+                />
+              </div>
+
               <button
                 onClick={handleEditTemplate}
-                disabled={loading || !storyTitle.trim()}
+                disabled={loading || !storyTitle.trim() || !storyDescription.trim()}
                 className="w-full py-3 px-4 bg-gradient-to-r from-[#83aa45] to-[#a0ad5f] text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating Draft...' : 'Create & Edit Story'}

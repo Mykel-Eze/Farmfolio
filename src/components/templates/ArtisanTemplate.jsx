@@ -1,6 +1,7 @@
 // File: src/components/templates/ArtisanTemplate.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './ArtisanTemplate.css';
@@ -12,6 +13,7 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
   const sectionsRef = useRef([]);
   const fileInputRef = useRef(null);
   const [currentImageField, setCurrentImageField] = useState(null);
+  const [activeField, setActiveField] = useState(null);
 
   // Parse data from backend (JSON string) - handle escaped JSON
   let content = data?.body || {};
@@ -126,6 +128,21 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
     }
   };
 
+  const handleFieldFocus = (field, event) => {
+    if (isEditMode) {
+      const rect = event.target.getBoundingClientRect();
+      setActiveField({ field, rect });
+    }
+  };
+
+  const handleFieldBlur = () => {
+    setTimeout(() => setActiveField(null), 200);
+  };
+
+  const handleAIHelp = () => {
+    console.log('AI help requested for field:', activeField?.field);
+  };
+
   const handleImageClick = (field) => {
     if (!isEditMode) return;
     setCurrentImageField(field);
@@ -164,7 +181,9 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
       {/* Navbar */}
       <nav className="artisan-navbar">
         <div className="artisan-logo">
-          <img src="/farmfolio.png" alt="Logo" />
+          <Link to="/">
+            <img src="/farmfolio.png" alt="Logo" />
+          </Link>
         </div>
 
         <Link to="/marketplace" className="marketplace-link">
@@ -189,7 +208,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
           <h1
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('heroTitle', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('heroTitle', e)}
+            onBlur={(e) => {
+              handleEditClick('heroTitle', e.target.textContent);
+              handleFieldBlur();
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroTitle}
@@ -197,7 +220,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('heroSubtitle', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('heroSubtitle', e)}
+            onBlur={(e) => {
+              handleEditClick('heroSubtitle', e.target.textContent);
+              handleFieldBlur();
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroSubtitle}
@@ -218,7 +245,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
         <p
           contentEditable={isEditMode}
           suppressContentEditableWarning
-          onBlur={(e) => handleEditClick('aboutText', e.target.textContent)}
+          onFocus={(e) => handleFieldFocus('aboutText', e)}
+          onBlur={(e) => {
+            handleEditClick('aboutText', e.target.textContent);
+            handleFieldBlur();
+          }}
         >
           {templateData.aboutText}
         </p>
@@ -236,7 +267,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
         <p
           contentEditable={isEditMode}
           suppressContentEditableWarning
-          onBlur={(e) => handleEditClick('craftsmanshipText', e.target.textContent)}
+          onFocus={(e) => handleFieldFocus('craftsmanshipText', e)}
+          onBlur={(e) => {
+            handleEditClick('craftsmanshipText', e.target.textContent);
+            handleFieldBlur();
+          }}
         >
           {templateData.craftsmanshipText}
         </p>
@@ -285,7 +320,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
               <p
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`steps.${index}.text`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`steps.${index}.text`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`steps.${index}.text`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {step.text}
               </p>
@@ -303,7 +342,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
               <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`testimonials.${index}.quote`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`testimonials.${index}.quote`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`testimonials.${index}.quote`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 "{testimonial.quote}"
               </span>
@@ -311,7 +354,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
                 className="artisan-author"
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`testimonials.${index}.author`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`testimonials.${index}.author`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`testimonials.${index}.author`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 – {testimonial.author}
               </span>
@@ -353,7 +400,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Email:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactEmail', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactEmail', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactEmail', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactEmail}
               </span>
@@ -362,7 +413,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Phone:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactPhone', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactPhone', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactPhone', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactPhone}
               </span>
@@ -371,7 +426,11 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Location:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactLocation', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactLocation', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactLocation', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactLocation}
               </span>
@@ -383,6 +442,21 @@ const ArtisanTemplate = ({ data, isEditMode = false, onEdit }) => {
         </div>
         <p className="artisan-footer-bottom">&copy; 2025 Artesano. Crafted with Passion.</p>
       </footer>
+
+      {/* AI Help Button - appears when editing text fields */}
+      {isEditMode && activeField && (
+        <button
+          onClick={handleAIHelp}
+          className="fixed z-50 flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg shadow-lg hover:bg-purple-700 transition-all text-sm font-medium"
+          style={{
+            top: `${activeField.rect?.top - 50}px`,
+            left: `${activeField.rect?.left}px`,
+          }}
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>AI Help</span>
+        </button>
+      )}
     </div>
   );
 };

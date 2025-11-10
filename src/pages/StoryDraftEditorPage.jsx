@@ -1,7 +1,7 @@
 // File: src/pages/StoryDraftEditorPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Eye, Save, Upload, ArrowLeft } from 'lucide-react';
+import { Eye, Save, Upload, ArrowLeft, Edit } from 'lucide-react';
 import { getStoryDraft, updateStoryDraft } from '../api/storyDraftsApi';
 import { createStory } from '../api/storiesApi';
 import { getTemplateComponent, TEMPLATE_TYPES } from '../components/templates';
@@ -17,6 +17,7 @@ const StoryDraftEditorPage = () => {
   const [publishing, setPublishing] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [editedContent, setEditedContent] = useState({});
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
 
   useEffect(() => {
     loadDraft();
@@ -65,10 +66,54 @@ const StoryDraftEditorPage = () => {
   };
 
   const handleEdit = (field, value) => {
-    setEditedContent(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setEditedContent(prev => {
+      // Handle nested paths (e.g., "steps.0.image")
+      if (field.includes('.')) {
+        const newContent = { ...prev };
+        const parts = field.split('.');
+        let current = newContent;
+
+        // Navigate to the parent of the target field
+        for (let i = 0; i < parts.length - 1; i++) {
+          const part = parts[i];
+          const index = parseInt(part);
+
+          if (!isNaN(index)) {
+            // It's an array index
+            if (!Array.isArray(current)) {
+              current = [];
+            }
+            if (!current[index]) {
+              current[index] = {};
+            }
+            current = current[index];
+          } else {
+            // It's an object key
+            if (!current[part]) {
+              current[part] = {};
+            }
+            current = current[part];
+          }
+        }
+
+        // Set the final value
+        const lastPart = parts[parts.length - 1];
+        const lastIndex = parseInt(lastPart);
+        if (!isNaN(lastIndex)) {
+          current[lastIndex] = value;
+        } else {
+          current[lastPart] = value;
+        }
+
+        return newContent;
+      }
+
+      // Simple field update
+      return {
+        ...prev,
+        [field]: value
+      };
+    });
   };
 
   const handleSaveDraft = async () => {
@@ -78,6 +123,7 @@ const StoryDraftEditorPage = () => {
       const updatedData = {
         storyTemplateId: draft.storyTemplateId,
         name: draft.name,
+        description: draft.description || 'No description provided',
         body: JSON.stringify(editedContent)
       };
 
@@ -94,16 +140,20 @@ const StoryDraftEditorPage = () => {
     }
   };
 
-  const handlePublish = async () => {
-    if (!window.confirm('Are you sure you want to publish this story?')) return;
+  const handlePublish = () => {
+    setShowPublishConfirm(true);
+  };
 
+  const confirmPublish = async () => {
     try {
       setPublishing(true);
+      setShowPublishConfirm(false);
 
       const storyData = {
         storyDraftId: parseInt(id),
         storyTemplateId: draft.storyTemplateId,
         name: draft.name,
+        description: draft.description || 'No description provided',
         body: JSON.stringify(editedContent)
       };
 
@@ -178,7 +228,11 @@ const StoryDraftEditorPage = () => {
                 onClick={() => setIsPreviewMode(!isPreviewMode)}
                 className="flex items-center px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-base flex-1 sm:flex-initial justify-center"
               >
-                <Eye className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                {isPreviewMode ? (
+                  <Edit className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                ) : (
+                  <Eye className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                )}
                 <span className="hidden sm:inline">{isPreviewMode ? 'Edit' : 'Preview'}</span>
               </button>
 
@@ -214,6 +268,43 @@ const StoryDraftEditorPage = () => {
           onEdit={handleEdit}
         />
       </div>
+
+      {/* Publish Confirmation Modal */}
+      {showPublishConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 animate-fade-in">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-[#83aa45]/10 flex items-center justify-center flex-shrink-0">
+                <Upload className="h-6 w-6 text-[#83aa45]" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Publish Your Story?
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Your story will be published and available to everyone. You'll receive a QR code to share with your audience.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowPublishConfirm(false)}
+                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmPublish}
+                disabled={publishing}
+                className="flex-1 px-4 py-3 bg-[#83aa45] text-white rounded-xl font-semibold hover:bg-[#7A8449] transition-colors disabled:opacity-50"
+              >
+                {publishing ? 'Publishing...' : 'Publish'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

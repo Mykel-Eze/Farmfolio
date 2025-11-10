@@ -9,14 +9,14 @@ export const TEMPLATE_TYPES = {
   MARKETPLACE: 'marketplace'
 };
 
-// Template IDs (should match backend template IDs)
+// Template ID mappings (matches backend template IDs)
 export const STORY_TEMPLATES = {
-  BEEF: { id: 1, name: 'beef', displayName: 'Artisan Beef', component: BeefTemplate },
-  ARTISAN: { id: 2, name: 'artisan', displayName: 'Handcrafted Artisan', component: ArtisanTemplate }
+  BEEF: { id: 12, name: 'Artisan Beef', component: BeefTemplate },
+  ARTISAN: { id: 11, name: 'Handcrafted Artisan', component: ArtisanTemplate }
 };
 
 export const MARKETPLACE_TEMPLATES = {
-  WINE: { id: 1, name: 'wine', displayName: 'Premium Wine Estate', component: WineTemplate }
+  WINE: { id: 4, name: 'Premium Wine Estate', component: WineTemplate }
 };
 
 // Get template component by ID and type

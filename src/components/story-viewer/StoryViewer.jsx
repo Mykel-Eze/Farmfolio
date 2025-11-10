@@ -58,7 +58,7 @@ const StoryViewer = () => {
 
   // Get the template component based on story's template ID
   const TemplateComponent = getTemplateComponent(
-    story.storyTemplateId || 1,
+    story.storyTemplateId || 12,
     TEMPLATE_TYPES.STORY
   );
 

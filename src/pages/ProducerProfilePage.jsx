@@ -60,7 +60,7 @@ const ProducerProfilePage = () => {
 
   // Get the template component based on profile's template ID
   const TemplateComponent = getTemplateComponent(
-    profile.producerProfileTemplateId || 1,
+    profile.producerProfileTemplateId || 4,
     TEMPLATE_TYPES.MARKETPLACE
   );
 

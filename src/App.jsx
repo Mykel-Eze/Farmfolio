@@ -27,6 +27,7 @@ import StoryViewer from './components/story-viewer/StoryViewer'
 import StoryTemplateSelectorPage from './pages/StoryTemplateSelectorPage'
 import MarketplaceTemplateSelectorPage from './pages/MarketplaceTemplateSelectorPage'
 import StoryDraftEditorPage from './pages/StoryDraftEditorPage'
+import StoryEditorPage from './pages/StoryEditorPage'
 import MarketplaceDraftEditorPage from './pages/MarketplaceDraftEditorPage'
 
 function App() {
@@ -167,7 +168,7 @@ function App() {
           path={ROUTES.EDIT_STORY}
           element={
             <PrivateRoute>
-              <StoryEditor />
+              <StoryEditorPage />
             </PrivateRoute>
           }
         />

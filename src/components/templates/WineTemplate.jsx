@@ -1,6 +1,7 @@
 // File: src/components/templates/WineTemplate.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './WineTemplate.css';
@@ -11,6 +12,7 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
   const sectionsRef = useRef([]);
   const fileInputRef = useRef(null);
   const [currentImageField, setCurrentImageField] = useState(null);
+  const [activeField, setActiveField] = useState(null);
 
   // Parse data from backend (JSON string) - handle escaped JSON
   let content = data?.body || {};
@@ -116,6 +118,21 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
     }
   };
 
+  const handleFieldFocus = (field, event) => {
+    if (isEditMode) {
+      const rect = event.target.getBoundingClientRect();
+      setActiveField({ field, rect });
+    }
+  };
+
+  const handleFieldBlur = () => {
+    setTimeout(() => setActiveField(null), 200);
+  };
+
+  const handleAIHelp = () => {
+    console.log('AI help requested for field:', activeField?.field);
+  };
+
   const handleImageClick = (field) => {
     if (!isEditMode) return;
     setCurrentImageField(field);
@@ -154,7 +171,9 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
       {/* Navigation */}
       <header className="wine-navbar">
         <div className="wine-logo">
-          <img src="/farmfolio.png" alt="logo" />
+          <Link to="/">
+            <img src="/farmfolio.png" alt="Logo" />
+          </Link>
         </div>
 
         <Link to="/marketplace" className="marketplace-link">
@@ -177,7 +196,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
           <h1
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('heroTitle', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('heroTitle', e)}
+            onBlur={(e) => {
+              handleEditClick('heroTitle', e.target.textContent);
+              handleFieldBlur();
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroTitle}
@@ -185,7 +208,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('heroSubtitle', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('heroSubtitle', e)}
+            onBlur={(e) => {
+              handleEditClick('heroSubtitle', e.target.textContent);
+              handleFieldBlur();
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {templateData.heroSubtitle}
@@ -207,7 +234,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('aboutText', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('aboutText', e)}
+            onBlur={(e) => {
+              handleEditClick('aboutText', e.target.textContent);
+              handleFieldBlur();
+            }}
           >
             {templateData.aboutText}
           </p>
@@ -227,7 +258,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('storyText', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('storyText', e)}
+            onBlur={(e) => {
+              handleEditClick('storyText', e.target.textContent);
+              handleFieldBlur();
+            }}
           >
             {templateData.storyText}
           </p>
@@ -247,7 +282,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
           <p
             contentEditable={isEditMode}
             suppressContentEditableWarning
-            onBlur={(e) => handleEditClick('vineyardText', e.target.textContent)}
+            onFocus={(e) => handleFieldFocus('vineyardText', e)}
+            onBlur={(e) => {
+              handleEditClick('vineyardText', e.target.textContent);
+              handleFieldBlur();
+            }}
           >
             {templateData.vineyardText}
           </p>
@@ -312,7 +351,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
               <p
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`awards.${index}.description`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`awards.${index}.description`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`awards.${index}.description`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {award.description}
               </p>
@@ -330,7 +373,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
               <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`testimonials.${index}.quote`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`testimonials.${index}.quote`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`testimonials.${index}.quote`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 "{testimonial.quote}"
               </span>
@@ -338,7 +385,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
                 className="wine-author"
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick(`testimonials.${index}.author`, e.target.textContent)}
+                onFocus={(e) => handleFieldFocus(`testimonials.${index}.author`, e)}
+                onBlur={(e) => {
+                  handleEditClick(`testimonials.${index}.author`, e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 – {testimonial.author}
               </span>
@@ -358,7 +409,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Email:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactEmail', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactEmail', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactEmail', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactEmail}
               </span>
@@ -367,7 +422,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Phone:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactPhone', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactPhone', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactPhone', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactPhone}
               </span>
@@ -376,7 +435,11 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
               <strong>Location:</strong> <span
                 contentEditable={isEditMode}
                 suppressContentEditableWarning
-                onBlur={(e) => handleEditClick('contactLocation', e.target.textContent)}
+                onFocus={(e) => handleFieldFocus('contactLocation', e)}
+                onBlur={(e) => {
+                  handleEditClick('contactLocation', e.target.textContent);
+                  handleFieldBlur();
+                }}
               >
                 {templateData.contactLocation}
               </span>
@@ -388,6 +451,21 @@ const WineTemplate = ({ data, isEditMode = false, onEdit }) => {
         </div>
         <p className="wine-footer-bottom">&copy; 2025 Château d'Élégance. All Rights Reserved.</p>
       </footer>
+
+      {/* AI Help Button - appears when editing text fields */}
+      {isEditMode && activeField && (
+        <button
+          onClick={handleAIHelp}
+          className="fixed z-50 flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg shadow-lg hover:bg-purple-700 transition-all text-sm font-medium"
+          style={{
+            top: `${activeField.rect?.top - 50}px`,
+            left: `${activeField.rect?.left}px`,
+          }}
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>AI Help</span>
+        </button>
+      )}
     </div>
   );
 };

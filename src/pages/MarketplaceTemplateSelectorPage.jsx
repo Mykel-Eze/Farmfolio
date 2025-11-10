@@ -14,6 +14,7 @@ const MarketplaceTemplateSelectorPage = () => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [showTitleInput, setShowTitleInput] = useState(false);
   const [profileTitle, setProfileTitle] = useState('');
+  const [profileDescription, setProfileDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState([]);
   const [fetchingTemplates, setFetchingTemplates] = useState(true);
@@ -85,6 +86,7 @@ const MarketplaceTemplateSelectorPage = () => {
     setSelectedTemplate(null);
     setShowTitleInput(false);
     setProfileTitle('');
+    setProfileDescription('');
   };
 
   const handleProceedToTitleInput = () => {
@@ -95,6 +97,10 @@ const MarketplaceTemplateSelectorPage = () => {
     if (!selectedTemplate) return;
     if (!profileTitle.trim()) {
       toast.error('Please enter a profile title');
+      return;
+    }
+    if (!profileDescription.trim()) {
+      toast.error('Please enter a profile description');
       return;
     }
 
@@ -131,6 +137,7 @@ const MarketplaceTemplateSelectorPage = () => {
       const draftData = {
         producerProfileTemplateId: selectedTemplate.id,
         name: profileTitle.trim(),
+        description: profileDescription.trim(),
         body: defaultBody,
         location: selectedTemplate.location || '',
         categoryIds: []
@@ -180,7 +187,7 @@ const MarketplaceTemplateSelectorPage = () => {
             <div className="text-center mb-6">
               <StoreIcon className="h-12 w-12 mx-auto text-slate-700 mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Name Your Profile</h2>
-              <p className="text-gray-600">Give your marketplace profile a title</p>
+              <p className="text-gray-600">Give your marketplace profile a title and description</p>
             </div>
 
             <div className="space-y-4">
@@ -199,9 +206,23 @@ const MarketplaceTemplateSelectorPage = () => {
                 />
               </div>
 
+              <div>
+                <label htmlFor="profileDescription" className="block text-sm font-medium text-gray-700 mb-2">
+                  Profile Description
+                </label>
+                <textarea
+                  id="profileDescription"
+                  value={profileDescription}
+                  onChange={(e) => setProfileDescription(e.target.value)}
+                  placeholder="e.g., Premium wine estate producing award-winning wines since 1872"
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-700 focus:border-transparent resize-none"
+                />
+              </div>
+
               <button
                 onClick={handleEditTemplate}
-                disabled={loading || !profileTitle.trim()}
+                disabled={loading || !profileTitle.trim() || !profileDescription.trim()}
                 className="w-full py-3 px-4 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating Draft...' : 'Create & Edit Profile'}
