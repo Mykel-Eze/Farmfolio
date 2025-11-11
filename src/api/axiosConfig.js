@@ -54,15 +54,33 @@ axiosInstance.interceptors.response.use(
 
     // Handle 401 Unauthorized - Token expired or invalid
     if (error.response.status === 401 && !originalRequest._retry) {
+      // Check if this is a public viewing endpoint (GET requests to stories/profiles by ID)
+      const isPublicViewEndpoint =
+        originalRequest.method?.toLowerCase() === 'get' && (
+          /\/stories\/\d+/i.test(originalRequest.url) ||
+          /\/producerprofiles\/\d+/i.test(originalRequest.url)
+        );
+
+      // If it's a public viewing endpoint, don't redirect to login
+      // Let the component handle the error (e.g., show "Not Found")
+      if (isPublicViewEndpoint) {
+        return Promise.reject({
+          message: ERROR_MESSAGES.NOT_FOUND,
+          status: 401,
+          originalError: error,
+        });
+      }
+
+      // For protected endpoints, redirect to login
       originalRequest._retry = true;
-      
+
       // Clear auth data
       localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
       localStorage.removeItem(STORAGE_KEYS.USER_DATA);
-      
+
       // Redirect to login
       window.location.href = '/login';
-      
+
       return Promise.reject({
         message: ERROR_MESSAGES.AUTH_ERROR,
         originalError: error,

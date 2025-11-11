@@ -129,6 +129,11 @@ const MapView = ({ profiles }) => {
     }
   };
 
+  // Filter profiles with valid coordinates - must be defined before use
+  const validProfiles = profiles.filter(
+    profile => profile.latitude && profile.longitude
+  );
+
   const handleProducerSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
@@ -184,11 +189,6 @@ const MapView = ({ profiles }) => {
       </div>
     );
   }
-
-  // Filter profiles with valid coordinates
-  const validProfiles = profiles.filter(
-    profile => profile.latitude && profile.longitude
-  );
 
   return (
     <div className="relative">

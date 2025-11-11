@@ -6,11 +6,14 @@ import { ArrowLeft } from 'lucide-react';
 import { getProducerProfileById } from '../api/producerProfilesApi';
 import { getTemplateComponent, TEMPLATE_TYPES } from '../components/templates';
 import { extractIdFromSlug } from '../utils/urlHelpers';
+import { useAuth } from '../hooks/useAuth';
+import Header from '../components/common/Header';
 import toast from 'react-hot-toast';
 
 const ProducerProfilePage = () => {
   const { slugId } = useParams();
   const id = extractIdFromSlug(slugId);
+  const { isAuthenticated } = useAuth();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -68,6 +71,7 @@ const ProducerProfilePage = () => {
 
   return (
     <div className="min-h-screen">
+      {isAuthenticated && <Header />}
       <TemplateComponent data={profile} isEditMode={false} />
     </div>
   );

@@ -184,7 +184,7 @@ const MarketplacePage = () => {
                 }`}
               >
                 <Grid className="h-5 w-5 inline mr-2" />
-                <span className="hidden sm:inline">Grid</span>
+                <span className="inline">Grid</span>
               </button>
               <button
                 onClick={() => setView('map')}
@@ -195,7 +195,7 @@ const MarketplacePage = () => {
                 }`}
               >
                 <MapIcon className="h-5 w-5 inline mr-2" />
-                <span className="hidden sm:inline">Map</span>
+                <span className="inline">Map</span>
               </button>
             </div>
           </div>
